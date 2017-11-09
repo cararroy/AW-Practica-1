@@ -40,13 +40,14 @@ body {
 }
 
 #menu a {
-	padding: 0px 20px;
+	padding: 5px 20px;
 	margin: 0px 5px;
 	text-decoration: none;
-	font-family: "myFont";
+	font-family: "MavenPro";
 	font-size: 13px;
+	font-weight: 600;
 	color: purple;
-	border: 1px solid purple;
+	border: 0.5px solid purple;
 	border-radius: 10px;
 }
 
@@ -56,7 +57,7 @@ body {
 }
 
 h1 {
-	font-family: "myFont";
+	font-family: "MavenPro";
 	font-size: 23px;
 	color: #444;
 }
