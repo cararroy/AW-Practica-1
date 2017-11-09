@@ -40,6 +40,13 @@
 	margin-top: -50px;
 }
 
+.purple-circle {
+	border: 1px dashed purple;
+	border-radius: 32px;
+	padding: 5px;
+	background-color: #e6e6e6;
+}
+
 .img-profile {
 	display: flex;
 	justify-content: center;
