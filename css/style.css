@@ -113,6 +113,7 @@ input[type="password"] {
 }
 
 .light-button {
+	text-decoration: none;
 	background-color: purple;
 	color: white;
 	border-style: none;
