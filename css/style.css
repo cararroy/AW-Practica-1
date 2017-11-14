@@ -3,6 +3,7 @@
 body {
 	margin: 0;
 	background-color: #f0f0f0;
+	font-family: "MavenPro"; 
 }
 
 /* Fonts */
@@ -35,8 +36,43 @@ body {
 	margin-left: 50px;
 }
 
+#usuario-banner {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+#data-banner p {
+	margin: 0;
+	padding-left: 20px;
+	font-size: 14px;
+	color: dimgray;
+}
+
+
+#banner-coins {
+	margin-top: 5px;
+	padding-left: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+#banner-coins span {
+	padding-left: 10px;
+	font-size: 13px;
+	color: dimgray;
+}
+
+#menu-right {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	margin-right: 30px;
+}
+
 #menu {
-	margin-right: 50px;
+	margin-right: 25px;
 }
 
 #menu a {
