@@ -1,0 +1,71 @@
+/* CSS Document */
+/* CSS Document */
+.container-questions {
+	padding: 0px 30px;
+	max-width: 1000px;
+	margin: auto;
+}
+.container-questions > h1, h5 {
+	
+	text-align: center;
+}
+
+#preguntas {
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	
+	width: 900px;
+	padding: 10px;
+	
+	align-items: center;
+	justify-content: flex-start;
+	margin-bottom: 50px;
+}
+
+.question-box {
+	border-left: 20px solid purple;
+	font-family: 'MavenPro';
+	font-size: 15px;
+	border-radius: 5px;
+	width: 500px;
+	padding: 15px 40px;
+	background-color: white;
+	margin-top: 10px;
+	margin-bottom: 0px;
+}
+
+.question-box a {
+	font-family: 'MavenPro';
+	font-size: 15px;
+	color: #444;
+	text-decoration: none;
+}
+
+.container-questions {
+	margin-top: 50px !important;
+	padding: 0px 30px;
+	max-width: 1000px;
+	margin: auto;
+	margin-bottom: 100px;
+}
+
+.container-questions > h1 {	
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.radio {
+	margin: 0;
+}
+
+.otra {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center
+}
+
+.otra input[type="text"] {
+    width: 350px;
+}
+
