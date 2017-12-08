@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Casper María Rodríguez</title>
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/friends.css">
 </head>
+
 <body>
 
 	<!-- Header -->
@@ -19,7 +21,7 @@
 				<a href="#">Amigos</a>
 				<a href="#">Preguntas</a>
 				<a href="index.html">Desconectar</a>
-			</div>	
+			</div>
 			<div id="usuario-banner">
 				<img class="purple-circle" width="32" height="32" src="img/man.png" alt="">
 				<div id="data-banner">
@@ -29,17 +31,17 @@
 						<span>50 puntos</span>
 					</div>
 				</div>
-			</div>	
+			</div>
 		</div>
 	</div>
-		
+
 	<!-- Contenedor principal -->
 	<div class="container-solicitudes">
-		
+
 		<h1>Solicitudes de amistad</h1>
-		
+
 		<div id="solicitudes">
-			
+
 			<div class="user-box">
 				<img src="img/man.png" alt="">
 				<h4>Casper María Rodríguez</h4>
@@ -48,7 +50,7 @@
 					<input value="Aceptar" type="submit">
 					<input value="Rechazar" type="submit">
 				</form>
-				
+
 			</div>
 			<div class="user-box">
 				<img src="img/man.png" alt="">
@@ -68,56 +70,57 @@
 					<input value="Rechazar" type="submit">
 				</form>
 			</div>
-			
-			
+
+
 		</div>
 
 	</div>
-	
+
 	<div class="container-amigos">
-		
+
 		<h1>Búsqueda de amigos</h1>
-		
+
 		<form method="POST" id="" class="buscar-amigos" action="">
 			<!--input type="hidden" name="idTarea" value = "<%= taskList[i].id %>" -->
 			<input value="" type="text">
-			<input value="Buscar" type="submit">					
+			<input value="Buscar" type="submit">
 		</form>
-		
+
 		<div id="solicitudes">
-			
+
 			<div class="user-box">
 				<img src="img/man.png" alt="">
 				<h4>Casper María Rodríguez</h4>
 				<form method="POST" id="" class="btn-solicitud" action="">
 					<!--input type="hidden" name="idTarea" value = "<%= taskList[i].id %>" -->
-					<input value="Ver perfil" type="submit">					
+					<input value="Ver perfil" type="submit">
 				</form>
-				
+
 			</div>
 			<div class="user-box">
 				<img src="img/man.png" alt="">
 				<h4>Casper María Rodríguez</h4>
 				<form method="POST" id="" class="btn-solicitud" action="">
-				<form method="POST" id="" class="btn-solicitud" action="">
-					<!--input type="hidden" name="idTarea" value = "<%= taskList[i].id %>" -->
-					<input value="Ver perfil" type="submit">					
-				</form>
+					<form method="POST" id="" class="btn-solicitud" action="">
+						<!--input type="hidden" name="idTarea" value = "<%= taskList[i].id %>" -->
+						<input value="Ver perfil" type="submit">
+					</form>
 			</div>
 			<div class="user-box">
 				<img src="img/man.png" alt="">
 				<h4>Casper María Rodríguez</h4>
 				<form method="POST" id="" class="btn-solicitud" action="">
-				<form method="POST" id="" class="btn-solicitud" action="">
-					<!--input type="hidden" name="idTarea" value = "<%= taskList[i].id %>" -->
-					<input value="Ver perfil" type="submit">					
-				</form>
+					<form method="POST" id="" class="btn-solicitud" action="">
+						<!--input type="hidden" name="idTarea" value = "<%= taskList[i].id %>" -->
+						<input value="Ver perfil" type="submit">
+					</form>
 			</div>
-			
-			
+
+
 		</div>
 
 	</div>
-	
+
 </body>
+
 </html>
