@@ -66,3 +66,27 @@ app.listen(config.port, function (err) {
 app.get("/login", function(request, response) {
     response.render("index");
 });
+app.get("/answer", function(request, response) {
+    response.render("answer");
+});
+app.get("/answer-other", function(request, response) {
+    response.render("answer_other");
+});
+app.get("/friends", function(request, response) {
+    response.render("friends");
+});
+app.get("/my-profile", function(request, response) {
+    response.render("my_profile");
+});
+app.get("/new-user", function(request, response) {
+    response.render("new_user");
+});
+app.get("/question-view", function(request, response) {
+    response.render("question_view");
+});
+app.get("/random", function(request, response) {
+    response.render("random");
+});
+app.get("/search", function(request, response) {
+    response.render("search");
+});

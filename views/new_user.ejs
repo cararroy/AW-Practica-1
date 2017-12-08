@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Nuevo usuario - Facebluf</title>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style_new_user.css">
+</head>
+
+<body>
+
+	<!-- Header -->
+	<div id="Facebluf-header">
+		<div id="logo">
+			<img src="img/Logo.png" alt="">
+		</div>
+		<div id="menu">
+			<a href="index.html">Entrar</a>
+			<a href="new_user.html">Nuevo usuario</a>
+		</div>
+	</div>
+
+	<!-- Contenedor principal -->
+	<div class="container">
+
+		<h1>Nuevo usuario</h1>
+
+		<!-- Formulario -->
+		<div id="form-box">
+			<form action="" method="post">
+				<div>
+					<label>Email</label>
+					<input type="email" name="email">
+				</div>
+				<div>
+					<label>Contraseña</label>
+					<input type="password" name="password">
+				</div>
+				<div>
+					<label>Nombre completo</label>
+					<input type="text" name="nombre_completo">
+				</div>
+				<div>
+					<label>Sexo</label>
+					<div class="radio">
+						<input id="radio-1" name="radio" type="radio">
+						<label for="radio-1" class="radio-label">Masculino</label>
+					</div>
+
+					<div class="radio">
+						<input id="radio-2" name="radio" type="radio">
+						<label for="radio-2" class="radio-label">Femenino</label>
+					</div>
+
+					<div class="radio">
+						<input id="radio-3" name="radio" type="radio">
+						<label for="radio-3" class="radio-label">Otro</label>
+					</div>
+
+				</div>
+				<div>
+					<label>Fecha de nacimiento</label>
+					<input type="date" name="fecha">
+				</div>
+				<div id="img-perfil">
+					<label>Imagen de perfil</label>
+					<input type="file" name="imagen_perfil">
+				</div>
+				<div class="submit">
+					<button class="light-button" type="submit">Crear usuario</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+</body>
+
+</html>
