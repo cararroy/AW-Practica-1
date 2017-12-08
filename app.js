@@ -6,6 +6,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const config = require("./config");
 //const daoTasks = require("./dao_tasks");
+const daoUsers = require("./dao_users");
 const expressSession = require("express-session");
 const expressMysqlSession = require("express-mysql-session");
 
@@ -64,8 +65,24 @@ app.listen(config.port, function (err) {
 });
 
 app.get("/login", function(request, response) {
-    response.render("index");
+    response.render("login", { errorMsg : null });
 });
+
+let daoU = new daoUsers.DAOUsers(pool);
+
+app.post("/login", function(request, response) {
+    let email = daoU.isUserCorrect(request.body.email, request.body.password, (err, existe) => {
+        if (err) {
+            console.error(err);
+        } else if (!existe) {
+            response.render("login", { errorMsg : "Dirección de correo y/o contraseña no válidas" });
+        } else {
+            request.session.currentUser = request.body.email;
+            response.redirect("/my_profile");
+        }
+    });
+});
+
 app.get("/answer", function(request, response) {
     response.render("answer");
 });

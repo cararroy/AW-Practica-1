@@ -28,7 +28,7 @@
 		<!-- Login -->
 		<div id="login-box">
 
-			<form action="" method="post">
+			<form action="/login" method="POST">
 				<div>
 					<label>Email</label>
 					<input type="email" name="email">
@@ -38,10 +38,15 @@
 					<input type="password" name="password">
 				</div>
 				<div class="submit">
-					<a class="light-button" href="my_profile.html">Conectar</a>
+					<!-- <a class="light-button">Conectar</a> -->
+					<input type="submit" value="Aceptar">
 				</div>
 			</form>
-
+			<% if (errorMsg !== null) { %>
+				<div class="error"
+					<%= errorMsg %>
+				</div>
+			<% } %>
 		</div>
 
 	</div>
