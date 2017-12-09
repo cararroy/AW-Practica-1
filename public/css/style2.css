@@ -91,8 +91,18 @@ label {
 	flex: 1;
 	display: inline-block;
 	margin-right: 15px;
-
+	min-width: 80px;
 	text-align: right;
+}
+
+.error {
+	padding: 20px;
+	margin: 30px;
+	text-align: center;
+	width: auto;
+	background-color: lightcoral;
+	border-left: 4px solid red;
+	border-right: 4px solid red;
 }
 
 input {
@@ -115,6 +125,7 @@ input[type="password"] {
 }
 
 .light-button {
+	flex: 0;
 	text-decoration: none;
 	background-color: purple;
 	color: white;

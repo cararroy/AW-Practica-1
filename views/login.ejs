@@ -39,16 +39,16 @@
 					<input type="password" name="password">
 				</div>
 				<div class="submit">
-					<!-- <a class="light-button">Conectar</a> -->
-					<input type="submit" value="Aceptar">
+					<input type="submit" value="Aceptar" class="light-button">
 				</div>
-			</form>
-			<% if (errorMsg !== null) { %>
-				<div class="error"
-					<%= errorMsg %>
-				</div>
-			<% } %>
+			</form>			
 		</div>
+
+		<% if (errorMsg !== null) { %>
+			<div class="error">
+				<strong><%= errorMsg %></strong>
+			</div>
+		<% } %>
 
 	</div>
 

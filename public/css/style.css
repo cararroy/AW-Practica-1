@@ -156,6 +156,7 @@ input[type="password"] {
 }
 
 .light-button {
+	flex: 0;
 	text-decoration: none;
 	background-color: purple;
 	color: white;
