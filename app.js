@@ -92,12 +92,15 @@ app.get("/answer-other", function(request, response) {
 app.get("/friends", function(request, response) {
     response.render("friends");
 });
-app.get("/my-profile", function(request, response) {
+app.get("/my_profile", middleWareAccessControl, (request, response) => {
     response.render("my_profile");
 });
-app.get("/new-user", function(request, response) {
+
+app.get("/new_user", function(request, response) {
     response.render("new_user");
+    response.redirect("/new_user");
 });
+
 app.get("/question-view", function(request, response) {
     response.render("question_view");
 });
@@ -106,4 +109,9 @@ app.get("/random", function(request, response) {
 });
 app.get("/search", function(request, response) {
     response.render("search");
+});
+
+app.get("/logout", function(request, response) {
+    request.session.destroy();
+    response.redirect("/login");
 });

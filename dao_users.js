@@ -52,6 +52,48 @@ class DAOUsers {
         });
     }
 
+    insertUser(email, password, img, nombre_completo, genero, fecha_nacimiento, callback) {
+        if (email !== '' && password !== '') {
+            this.pool.getConnection((err, connection) => {
+                if (err) {
+                    connection.release();
+                    callback(err);
+                }
+                connection.query("INSERT INTO facebluff.users VALUES (?, ?, ?, ?, ?, ?, 0)", 
+                [email, password, img, nombre_completo, genero, fecha_nacimiento], (err, result) => {
+                    if (err) {
+                        connection.release();
+                        callback(err);
+                    } else {
+                        connection.release();
+                        callback(null);
+                    }
+                });
+            });
+        } else {
+            callback(null);
+        }
+    }
+
+    getUserProfile(email, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT nombre_completo FROM facebluff.users WHERE email=?", [email], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        // ...
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
+
     
 }
 
