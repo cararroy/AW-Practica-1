@@ -110,7 +110,17 @@ app.get("/my_profile", middleWareAccessControl, (request, response) => {
 
 app.get("/new_user", function(request, response) {
     response.render("new_user");
-    response.redirect("/new_user");
+});
+
+app.post("/new_user", function(request, response) {
+    let email = daoU.insertUser(request.body.email, request.body.password, request.body.img, request.body.nombre_completo, request.body.genero, request.body.fecha_nacimiento, (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            request.session.currentUser = request.body.email;
+            response.redirect("/my_profile");
+        }
+    });
 });
 
 app.get("/question-view", function(request, response) {

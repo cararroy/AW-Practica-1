@@ -60,7 +60,7 @@ class DAOUsers {
                     callback(err);
                 }
                 connection.query("INSERT INTO facebluff.users VALUES (?, ?, ?, ?, ?, ?, 0)", 
-                [email, password, img, nombre_completo, genero, fecha_nacimiento], (err, result) => {
+                [email, password, img, nombre_completo, genero, fecha_nacimiento], (err) => {
                     if (err) {
                         connection.release();
                         callback(err);
