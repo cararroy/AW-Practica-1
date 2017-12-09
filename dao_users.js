@@ -143,7 +143,40 @@ class DAOUsers {
         });
     }
 
-    
+    /**
+    * Obtiene el nombre de fichero que contiene la imagen de perfil de un usuario.
+    *
+    
+    * Es una operación asíncrona, de modo que se llamará a la función callback
+    * pasando, por un lado, el objeto Error (si se produce, o null en caso contrario)
+    * y, por otro lado, una cadena con el nombre de la imagen de perfil (o undefined
+    * en caso de producirse un error). Si el usuario no tiene imagen de perfil, dicha
+    * cadena tomará el valor null.
+    *
+    * @param {string} email Identificador del usuario cuya imagen se quiere obtener
+    * @param {function} callback Función que recibirá el objeto error y el resultado
+    */
+    getUserImageName(email, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+            } else {
+                connection.query("SELECT img FROM users where email=?", [email], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if (result.length > 0) {
+                            console.log("entre");
+                            callback(null, result[0].img);
+                        } else {
+                            callback(null, null);
+                        }
+                    }
+                });
+            }
+        });
+    }   
 }
 
 module.exports = {
