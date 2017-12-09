@@ -213,7 +213,6 @@ app.post("/edit", function(request, response) {
     });
 });
 
-            console.error(err);
 app.get("/question-view", function(request, response) {
     response.render("question_view");
 });
