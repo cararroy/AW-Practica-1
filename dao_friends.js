@@ -31,12 +31,19 @@ class DAOFriends {
                 callback(err);
                 return;
             } else {
-                connection.query("SELECT users.img, users.nombre_completo FROM users JOIN friends WHERE users.email = friends.email1 or users.email = friends.email2", [email], (err, result) => {
+                connection.query("SELECT img, nombre_completo FROM facebluff.users JOIN facebluff.friends ON email1 = email OR email2 = email WHERE confirmado = 1", [email], (err, rows) => {
                     connection.release();
                     if (err) {
                         callback(err);
                     } else {
-                        
+                        let friends = [];
+                        rows.forEach(row => {
+                            let amigos = {
+                                img: row.img,
+                                nombre_completo: row.nombre_completo
+                            };
+                        });
+                        callback(null, friends);
                     }
                 });
             }
@@ -46,5 +53,5 @@ class DAOFriends {
 }
 
 module.exports = {
-    DAOFrieds: DAOFriends
+    DAOFriends: DAOFriends
 }

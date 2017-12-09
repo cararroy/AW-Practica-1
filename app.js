@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const config = require("./config");
 //const daoTasks = require("./dao_tasks");
 const daoUsers = require("./dao_users");
+const daoFriends = require("./dao_friends");
 const expressSession = require("express-session");
 const expressMysqlSession = require("express-mysql-session");
 
@@ -69,6 +70,7 @@ app.get("/login", function(request, response) {
 });
 
 let daoU = new daoUsers.DAOUsers(pool);
+let daoF = new daoFriends.DAOFriends(pool);
 
 app.post("/login", function(request, response) {
     let email = daoU.isUserCorrect(request.body.email, request.body.password, (err, existe) => {
@@ -86,11 +88,20 @@ app.post("/login", function(request, response) {
 app.get("/answer", function(request, response) {
     response.render("answer");
 });
+
 app.get("/answer-other", function(request, response) {
     response.render("answer_other");
 });
-app.get("/friends", function(request, response) {
-    response.render("friends");
+
+app.get("/friends", middleWareAccessControl, (request, response) => {
+    daoF.getAllFriends(request.session.currentUser, (err, friendsList) => {
+        if (err) {
+            console.error(err);
+            next();
+        } else {
+            response.render("friends", { friends: friendsList});
+        }
+    });
 });
 
 app.get("/my_profile", middleWareAccessControl, (request, response) => {
@@ -216,9 +227,11 @@ app.post("/edit", function(request, response) {
 app.get("/question-view", function(request, response) {
     response.render("question_view");
 });
+
 app.get("/random", function(request, response) {
     response.render("random");
 });
+
 app.get("/search", function(request, response) {
     response.render("search");
 });
