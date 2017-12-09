@@ -137,3 +137,15 @@ app.get("/logout", function(request, response) {
     request.session.destroy();
     response.redirect("/login");
 });
+
+app.get("/user_image", (request, response) => {
+    daoU.getUserImageName(request.session.currentUser, (err, cadena) => {
+        if (err || cadena === null) {
+            let img = __dirname.concat("/public/img/NoProfile.png");
+            response.sendFile(img);
+        } else {
+            let img = __dirname.concat("/public/icons/".concat(cadena));
+            response.sendFile(img);
+        }
+    });
+});
