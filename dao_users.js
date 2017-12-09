@@ -75,13 +75,36 @@ class DAOUsers {
         }
     }
 
+    editProfile(email, password, img, nombre_completo, genero, fecha_nacimiento, callback) {
+        if (nombre_completo !== '' && password !== '') {
+            this.pool.getConnection((err, connection) => {
+                if (err) {
+                    connection.release();
+                    callback(err);
+                }
+                connection.query("UPDATE facebluff.users SET password=?, img=?, nombre_completo=?, genero=?, fecha_nacimiento=? WHERE email=?", 
+                [password, img, nombre_completo, genero, fecha_nacimiento, email], (err) => {
+                    if (err) {
+                        connection.release();
+                        callback(err);
+                    } else {
+                        connection.release();
+                        callback(null);
+                    }
+                });
+            });
+        } else {
+            callback(null);
+        }
+    }
+
     getUserProfile(email, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) {
                 connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT nombre_completo, fecha_nacimiento, genero, puntuacion FROM facebluff.users WHERE email=?", [email], (err, result) => {
+                connection.query("SELECT * FROM facebluff.users WHERE email=?", [email], (err, result) => {
                     connection.release();
                     if (err) {
                         callback(err);
@@ -103,13 +126,16 @@ class DAOUsers {
                     
                         if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate()))
                             edad--;
-
+                        
                         let data = { 
                             nombre_completo: result[0].nombre_completo,
-                            fecha_nacimiento: edad,
+                            edad: edad,
                             genero: sexo,
-                            puntuacion: result[0].puntuacion};
-
+                            sexoNum: result[0].genero,
+                            puntuacion: result[0].puntuacion,
+                            fecha_nacimiento: result[0].fecha_nacimiento.toLocaleDateString("es-ES", {year: "numeric", month: "2-digit", day: "2-digit"}),
+                            password: result[0].password
+                        };                            
                         callback(null, data);
                     }
                 });

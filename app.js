@@ -100,7 +100,7 @@ app.get("/my_profile", middleWareAccessControl, (request, response) => {
         } else {
             response.render("my_profile", {
                 name : result.nombre_completo,
-                fecha_nacimiento: result.fecha_nacimiento,
+                fecha_nacimiento: result.edad,
                 genero: result.genero,
                 puntuacion: result.puntuacion
             });
@@ -123,6 +123,97 @@ app.post("/new_user", function(request, response) {
     });
 });
 
+app.get("/edit", function(request, response) {
+    let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
+        if (err) {
+            console.error(err);
+        } else {
+            let sexo = ["", "", ""];
+            sexo[result.sexoNum] = "checked";
+            response.render("edit", {
+                email: request.session.currentUser,
+                password: result.password,
+                name : result.nombre_completo,
+                fecha: result.fecha_nacimiento,
+                genero: sexo,
+                puntuacion: result.puntuacion
+            });
+        }
+    });
+});
+
+app.post("/edit", function(request, response) {
+    let email = daoU.editProfile(request.session.currentUser, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            //request.session.currentUser = request.body.email;
+            response.redirect("/my_profile");
+        }
+    });
+});
+
+app.get("/edit", function(request, response) {
+    let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
+        if (err) {
+            console.error(err);
+        } else {
+            let sexo = ["", "", ""];
+            sexo[result.sexoNum] = "checked";
+            response.render("edit", {
+                email: request.session.currentUser,
+                password: result.password,
+                name : result.nombre_completo,
+                fecha: result.fecha_nacimiento,
+                genero: sexo,
+                puntuacion: result.puntuacion
+            });
+        }
+    });
+});
+
+app.post("/edit", function(request, response) {
+    let email = daoU.editProfile(request.session.currentUser, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            //request.session.currentUser = request.body.email;
+            response.redirect("/my_profile");
+        }
+    });
+});
+
+app.get("/edit", function(request, response) {
+    let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
+        if (err) {
+            console.error(err);
+        } else {
+            let sexo = ["", "", ""];
+            sexo[result.sexoNum] = "checked";
+            response.render("edit", {
+                email: request.session.currentUser,
+                password: result.password,
+                name : result.nombre_completo,
+                fecha: result.fecha_nacimiento,
+                genero: sexo,
+                puntuacion: result.puntuacion
+            });
+        }
+    });
+});
+
+app.post("/edit", function(request, response) {
+    let email = daoU.editProfile(request.session.currentUser, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            //request.session.currentUser = request.body.email;
+            response.redirect("/my_profile");
+        }
+    });
+});
+
+            console.error(err);
 app.get("/question-view", function(request, response) {
     response.render("question_view");
 });
