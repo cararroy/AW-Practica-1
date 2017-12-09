@@ -81,13 +81,36 @@ class DAOUsers {
                 connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT nombre_completo FROM facebluff.users WHERE email=?", [email], (err, result) => {
+                connection.query("SELECT nombre_completo, fecha_nacimiento, genero, puntuacion FROM facebluff.users WHERE email=?", [email], (err, result) => {
                     connection.release();
                     if (err) {
                         callback(err);
                     } else {
-                        // ...
-                        callback(null, result);
+                        // Obtener genero
+                        let sexo;
+                        if (result[0].genero === 0)
+                            sexo = "Hombre";
+                        else if (result[0].genero === 1)
+                            sexo = "Mujer";
+                        else
+                            sexo = "Otro";
+                        
+                        // Obtener edad
+                        let hoy = new Date();
+                        let cumpleanos = new Date(result[0].fecha_nacimiento);
+                        let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+                        let m = hoy.getMonth() - cumpleanos.getMonth();
+                    
+                        if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate()))
+                            edad--;
+
+                        let data = { 
+                            nombre_completo: result[0].nombre_completo,
+                            fecha_nacimiento: edad,
+                            genero: sexo,
+                            puntuacion: result[0].puntuacion};
+
+                        callback(null, data);
                     }
                 });
             }

@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Casper María Rodríguez</title>
+	<title><%= name %></title>
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/profile.css">
 </head>
@@ -25,10 +25,10 @@
 			<div id="usuario-banner">
 				<img class="purple-circle" width="32" height="32" src="img/man.png" alt="">
 				<div id="data-banner">
-					<p>Casper María Rodríguez</p>
+					<p><%= name %></p>
 					<div id="banner-coins">
 						<img width="15" height="15" src="img/coins.png" alt="">
-						<span>50 puntos</span>
+						<span><%= puntuacion %> puntos</span>
 					</div>
 				</div>
 			</div>
@@ -50,13 +50,13 @@
 
 			<div id="data-user">
 				<div><img class="purple-circle" width="32" height="32" src="img/boy.png" alt=""></div>
-				<div>Casper María Rodríguez</div>
+				<div><%= name %></div>
 				<div><img class="purple-circle" width="32" height="32" src="img/cake.png" alt=""></div>
-				<div>33 años</div>
+				<div><%= fecha_nacimiento %> años</div>
 				<div><img class="purple-circle" width="32" height="32" src="img/gender.png" alt=""></div>
-				<div>Hombre</div>
+				<div><%= genero %></div>
 				<div><img class="purple-circle" width="32" height="32" src="img/coins.png" alt=""></div>
-				<div>50 puntos</div>
+				<div><%= puntuacion %> puntos</div>
 			</div>
 
 		</div>

@@ -92,8 +92,20 @@ app.get("/answer-other", function(request, response) {
 app.get("/friends", function(request, response) {
     response.render("friends");
 });
+
 app.get("/my_profile", middleWareAccessControl, (request, response) => {
-    response.render("my_profile");
+    let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
+        if (err) {
+            console.error(err);
+        } else {
+            response.render("my_profile", {
+                name : result.nombre_completo,
+                fecha_nacimiento: result.fecha_nacimiento,
+                genero: result.genero,
+                puntuacion: result.puntuacion
+            });
+        }
+    });
 });
 
 app.get("/new_user", function(request, response) {
