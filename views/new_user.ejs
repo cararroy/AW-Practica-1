@@ -5,7 +5,6 @@
 	<meta charset="UTF-8">
 	<title>Nuevo usuario - Facebluf</title>
 	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/style_new_user.css">
 </head>
 
 <body>
@@ -16,8 +15,8 @@
 			<img src="img/Logo.png" alt="">
 		</div>
 		<div id="menu">
-			<a href="index.html">Entrar</a>
-			<a href="new_user.html">Nuevo usuario</a>
+			<a href="/login">Entrar</a>
+			<a href="/new_user">Nuevo usuario</a>
 		</div>
 	</div>
 
@@ -27,7 +26,7 @@
 		<h1>Nuevo usuario</h1>
 
 		<!-- Formulario -->
-		<div id="form-box">
+		<div id="login-box">
 			<form action="/new_user" method="POST">
 				<div>
 					<label>Email</label>
@@ -43,19 +42,21 @@
 				</div>
 				<div>
 					<label>Sexo</label>
-					<div class="radio">
-						<input id="radio-1" name="0" type="radio" value="0">
-						<label for="radio-1" class="radio-label">Masculino</label>
-					</div>
-
-					<div class="radio">
-						<input id="radio-2" name="1" type="radio" value="1">
-						<label for="radio-2" class="radio-label">Femenino</label>
-					</div>
-
-					<div class="radio">
-						<input id="radio-3" name="2" type="radio" value="2">
-						<label for="radio-3" class="radio-label">Otro</label>
+					<div class="check">
+						<div class="radio">
+							<input id="radio-1" name="sexo" type="radio" value="0">
+							<label for="radio-1" class="radio-label">Masculino</label>
+						</div>
+	
+						<div class="radio">
+							<input id="radio-2" name="sexo" type="radio" value="1">
+							<label for="radio-2" class="radio-label">Femenino</label>
+						</div>
+	
+						<div class="radio">
+							<input id="radio-3" name="sexo" type="radio" value="2">
+							<label for="radio-3" class="radio-label">Otro</label>
+						</div>
 					</div>
 
 				</div>
@@ -68,7 +69,7 @@
 					<input type="file" name="imagen_perfil">
 				</div>
 				<div class="submit">
-					<button class="light-button" type="submit">Crear usuario</button>
+					<input type="submit" value="Crear usuario" class="light-button">
 				</div>
 			</form>
 		</div>

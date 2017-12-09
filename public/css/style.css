@@ -106,7 +106,7 @@ h5 {
 
 .container {
 	padding: 0px 30px;
-	max-width: 500px;
+	max-width: 600px;
 	margin: auto;
 }
 
@@ -132,8 +132,18 @@ label {
 	flex: 1;
 	display: inline-block;
 	margin-right: 15px;
-
+	min-width: 80px;
 	text-align: right;
+}
+
+.error {
+	padding: 20px;
+	margin: 30px;
+	text-align: center;
+	width: auto;
+	background-color: lightcoral;
+	border-left: 4px solid red;
+	border-right: 4px solid red;
 }
 
 input {
@@ -150,9 +160,22 @@ input[type="password"] {
 	font-size: 22px;
 }
 
+input[type="file"] {
+	border: none;
+}
+
+input[type="submit"] {
+	cursor: pointer;
+}
+
 .submit {
 	text-align: center;
 	margin-top: 40px;
+}
+
+.check {
+	display: flex;
+	flex: 5;
 }
 
 .light-button {

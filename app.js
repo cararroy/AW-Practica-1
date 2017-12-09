@@ -113,7 +113,7 @@ app.get("/new_user", function(request, response) {
 });
 
 app.post("/new_user", function(request, response) {
-    let email = daoU.insertUser(request.body.email, request.body.password, request.body.img, request.body.nombre_completo, request.body.genero, request.body.fecha_nacimiento, (err) => {
+    let email = daoU.insertUser(request.body.email, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
         if (err) {
             console.error(err);
         } else {
