@@ -51,8 +51,10 @@
 			<div id="data-user">
 				<div><img class="purple-circle" width="32" height="32" src="img/boy.png" alt=""></div>
 				<div><%= name %></div>
-				<div><img class="purple-circle" width="32" height="32" src="img/cake.png" alt=""></div>
-				<div><%= fecha_nacimiento %> años</div>
+				<% if (fecha_nacimiento !== -1) { %>
+					<div><img class="purple-circle" width="32" height="32" src="img/cake.png" alt=""></div>
+					<div><%= fecha_nacimiento %> años</div>
+				<% } %>
 				<div><img class="purple-circle" width="32" height="32" src="img/gender.png" alt=""></div>
 				<div><%= genero %></div>
 				<div><img class="purple-circle" width="32" height="32" src="img/coins.png" alt=""></div>

@@ -152,7 +152,7 @@ class DAOUsers {
                         
                         let data = { 
                             nombre_completo: result[0].nombre_completo,
-                            edad: 0,
+                            edad: -1,
                             genero: sexo,
                             sexoNum: result[0].genero,
                             puntuacion: result[0].puntuacion,
