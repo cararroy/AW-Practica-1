@@ -107,15 +107,12 @@ app.get("/answer-other", function(request, response) {
 });
 
 app.get("/friends", middleWareAccessControl, (request, response) => {
-    let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
+    let dataFriend = daoF.getAllFriends(request.session.currentUser, (err, result) => {
         if (err) {
             console.error(err);
         } else {
             response.render("friends", {
-                name: result.nombre_completo,
-                fecha_nacimiento: result.edad,
-                genero: result.genero,
-                puntuacion: result.puntuacion
+                friends: result
             });
         }
     });

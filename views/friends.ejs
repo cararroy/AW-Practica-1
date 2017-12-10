@@ -17,7 +17,7 @@
 		</div>
 		<div id="menu-right">
 			<div id="menu">
-				<a href="#">Perfil</a>
+				<a href="/my_profile">Perfil</a>
 				<a href="#">Amigos</a>
 				<a href="#">Preguntas</a>
 				<a href="/logout">Desconectar</a>
@@ -25,10 +25,10 @@
 			<div id="usuario-banner">
 				<img class="purple-circle" width="32" height="32" src="/user_image" alt="">
 				<div id="data-banner">
-					<p><%= name %></p>
+					<p>Casper María Rodríguez</p>
 					<div id="banner-coins">
 						<img width="15" height="15" src="img/coins.png" alt="">
-						<span><%= puntuacion %> puntos</span>
+						<span>10000 puntos</span>
 					</div>
 				</div>
 			</div>
@@ -86,7 +86,11 @@
 			<input value="Buscar" type="submit">
 		</form>
 
+		<h1>Mis amigos</h1>
+
 		<div id="solicitudes">
+
+			<%- include("friendsList") %>
 
 			<div class="user-box">
 				<img src="img/man.png" alt="">

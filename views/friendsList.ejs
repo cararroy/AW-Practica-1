@@ -1,0 +1,15 @@
+<%
+
+if (friends) {
+    friends.forEach(friend => { %>
+        <div class="user-box">
+			<img src="img/man.png" alt="">
+			<h4><%= friend.name %></h4>
+			<form method="POST" id="" class="btn-solicitud" action="">
+				<input value="Ver perfil" type="submit">
+			</form>
+		</div>
+    <% });
+}
+
+%>
