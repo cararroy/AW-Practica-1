@@ -52,7 +52,31 @@ class DAOUsers {
         });
     }
 
+    existUser(email, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT * FROM facebluff.users WHERE email=?", [email], (err, userExists) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if(userExists.length === 0) {
+                            userExists = false;
+                        } else {
+                            userExists = true;
+                        }
+                        callback(null, userExists);
+                    }
+                });
+            }
+        });
+    }
+
     insertUser(email, password, img, nombre_completo, genero, fecha_nacimiento, callback) {
+        console.log(fecha_nacimiento);
         if (email !== '' && password !== '') {
             this.pool.getConnection((err, connection) => {
                 if (err) {
@@ -129,13 +153,19 @@ class DAOUsers {
                         
                         let data = { 
                             nombre_completo: result[0].nombre_completo,
-                            edad: edad,
+                            edad: 0,
                             genero: sexo,
                             sexoNum: result[0].genero,
                             puntuacion: result[0].puntuacion,
-                            fecha_nacimiento: result[0].fecha_nacimiento.toLocaleDateString("es-ES", {year: "numeric", month: "2-digit", day: "2-digit"}),
+                            fecha_nacimiento: result[0].fecha_nacimiento,
                             password: result[0].password
-                        };                            
+                        };              
+                        
+                        if (result[0].fecha_nacimiento !== "0000-00-00") {
+                            data.fecha_nacimiento = result[0].fecha_nacimiento.toLocaleDateString("es-ES", {year: "numeric", month: "2-digit", day: "2-digit"});
+                            data.edad = edad;
+                        }
+                        
                         callback(null, data);
                     }
                 });
@@ -167,7 +197,6 @@ class DAOUsers {
                         callback(err);
                     } else {
                         if (result.length > 0) {
-                            console.log("entre");
                             callback(null, result[0].img);
                         } else {
                             callback(null, null);

@@ -9,6 +9,7 @@ const config = require("./config");
 const daoUsers = require("./dao_users");
 const expressSession = require("express-session");
 const expressMysqlSession = require("express-mysql-session");
+var expressValidator = require("express-validator");
 
 const MySQLStore = expressMysqlSession(expressSession);
 
@@ -25,6 +26,18 @@ const ficherosEstaticos = path.join(__dirname, "public");
 
 app.use(express.static(ficherosEstaticos));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator({
+    customValidators: {
+        // funciones personalizadas para validar
+        fechaValida: function(param) {
+            
+            if(param === "" || param < new Date().toLocaleDateString("es-ES", {year: "numeric", month: "2-digit", day: "2-digit"}))
+                return true;
+            else 
+                return false;
+        }
+    }
+}));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -109,16 +122,48 @@ app.get("/my_profile", middleWareAccessControl, (request, response) => {
 });
 
 app.get("/new_user", function(request, response) {
-    response.render("new_user");
+    response.render("new_user", {errores: [], usuario: {}, userExist: "", sex: false, genero: ["", "", ""]});
 });
 
 app.post("/new_user", function(request, response) {
-    let email = daoU.insertUser(request.body.email, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
-        if (err) {
-            console.error(err);
+    request.checkBody("nombre_completo", "Nombre de usuario vacío").notEmpty();
+    request.checkBody("password", "La contraseña no tiene entre 6 y 10 caracteres").isLength({ min: 6, max: 10 });
+    request.checkBody("email", "Dirección de correo no válida").isEmail();
+    request.checkBody("fecha", "Fecha de nacimiento no válida").fechaValida();
+    request.getValidationResult().then((result) => {
+        let sex = ["", "", ""];
+        sex[request.body.sexo] = "checked";
+        var usuarioIncorrecto = {
+            nombre_completo: request.body.nombre_completo,
+            password: request.body.password,
+            email: request.body.email,
+            genero: sex,
+            fecha: request.body.fecha
+        };
+        if (result.isEmpty() && request.body.sexo !== undefined) {
+            daoU.existUser(request.body.email, (err, userExists) => {
+                if (err) {
+                    console.error(err);
+                } else if (userExists) { // Email ya existente en la base de datos
+                    response.render("new_user", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: request.body.email, sex: false, genero: sex});
+                } else { // Email valido
+                    daoU.insertUser(request.body.email, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
+                        if (err) { 
+                            console.error(err);
+                        } else {
+                            request.session.currentUser = request.body.email;
+                            response.redirect("/my_profile");
+                        }
+                    });
+                }
+            });
+            
         } else {
-            request.session.currentUser = request.body.email;
-            response.redirect("/my_profile");
+            let sexoMsg = false;
+            if (request.body.sexo === undefined)
+                sexoMsg = true;
+            
+            response.render("new_user", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: sexoMsg, genero: sex});
         }
     });
 });
