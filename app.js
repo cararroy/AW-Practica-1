@@ -96,10 +96,10 @@ app.get("/answer-other", function(request, response) {
 app.get("/friends", middleWareAccessControl, (request, response) => {
     daoF.getAllFriends(request.session.currentUser, (err, friendsList) => {
         if (err) {
-            console.error(err);
-            next();
+            next(err);
+            return;
         } else {
-            response.render("friends", { friends: friendsList});
+            response.render("friends", { frieds: friendsList });
         }
     });
 });
