@@ -31,27 +31,13 @@ class DAOFriends {
                 callback(err);
                 return;
             } else {
-                // esto me patina por todos lados, revisar
-                connection.query("SELECT email2 FROM friends WHERE confirmado=1 AND email1=?", [email], (err, rows) => {
+                connection.query("SELECT img, nombre_completo FROM users as u JOIN friends as f WHERE f.email1=? AND f.email2 = u.email;", [email], (err, rows) => {
                     connection.release();
                     if (err) {
                         callback(err);
-                    } else {
-                        let friends = [];
-                        let last = 0;
-                        let prev =- 1;
-                        rows.forEach(row => {
-                            let amigos = {
-                                email: row.email2
-                            };
-                            if (last !== row.email2) {
-                                last = row.email2;
-                                friends.push(amigos);
-                                prev++;
-                            }
-                        });
-                        callback(null, friends);
+                        return;
                     }
+                    callback(null, rows);
                 });
             }
         });
