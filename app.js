@@ -138,6 +138,7 @@ app.get("/new_user", function(request, response) {
 
 app.post("/new_user", function(request, response) {
     request.checkBody("nombre_completo", "Nombre de usuario vacío").notEmpty();
+    request.checkBody("nombre_completo", "Nombre de usuario no válido").matches(/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/); // Sólo letras y espacios
     request.checkBody("password", "La contraseña no tiene entre 6 y 10 caracteres").isLength({ min: 6, max: 10 });
     request.checkBody("email", "Dirección de correo no válida").isEmail();
     request.checkBody("fecha", "Fecha de nacimiento no válida").fechaValida();

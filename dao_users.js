@@ -76,7 +76,6 @@ class DAOUsers {
     }
 
     insertUser(email, password, img, nombre_completo, genero, fecha_nacimiento, callback) {
-        console.log(fecha_nacimiento);
         if (email !== '' && password !== '') {
             this.pool.getConnection((err, connection) => {
                 if (err) {
