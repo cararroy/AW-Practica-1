@@ -24,10 +24,10 @@
 			<div id="usuario-banner">
 				<img class="purple-circle" width="32" height="32" src="img/man.png" alt="">
 				<div id="data-banner">
-					<p><%= name %></p>
+					<p><%= usuario.name %></p>
 					<div id="banner-coins">
 						<img width="15" height="15" src="img/coins.png" alt="">
-						<span><%= puntuacion %> puntos</span>
+						<span><%= usuario.puntuacion %> puntos</span>
 					</div>
 				</div>
 			</div>
@@ -44,31 +44,31 @@
 			<form action="/edit" method="POST">
 				<div>
 					<label>Email</label>
-					<input type="email" name="email" value="<%= email %>" disabled>
+					<input type="email" name="email" value="<%= usuario.email %>" disabled>
 				</div>
 				<div>
 					<label>Contraseña</label>
-					<input type="password" name="password" value="<%= password %>">
+					<input type="password" name="password" value="<%= usuario.password %>">
 				</div>
 				<div>
 					<label>Nombre completo</label>
-					<input type="text" name="nombre_completo" value="<%= name %>">
+					<input type="text" name="nombre_completo" value="<%= usuario.name %>">
 				</div>
 				<div>
 					<label>Sexo</label>
 					<div class="check">						
 						<div class="radio">
-							<input id="radio-1" name="sexo" type="radio" value="0" <%= genero[0] %>>
+							<input id="radio-1" name="sexo" type="radio" value="0" <%= usuario.genero[0] %>>
 							<label for="radio-1" class="radio-label">Masculino</label>
 						</div>
 	
 						<div class="radio">
-							<input id="radio-2" name="sexo" type="radio" value="1" <%= genero[1] %>>
+							<input id="radio-2" name="sexo" type="radio" value="1" <%= usuario.genero[1] %>>
 							<label for="radio-2" class="radio-label">Femenino</label>
 						</div>
 	
 						<div class="radio">
-							<input id="radio-3" name="sexo" type="radio" value="2" <%= genero[2] %>>
+							<input id="radio-3" name="sexo" type="radio" value="2" <%= usuario.genero[2] %>>
 							<label for="radio-3" class="radio-label">Otro</label>
 						</div>
 					</div>
@@ -76,7 +76,7 @@
 				</div>
 				<div>
 					<label>Fecha de nacimiento</label>
-					<input type="date" name="fecha" value="<%= fecha %>">
+					<input type="date" name="fecha" value="<%= usuario.fecha %>">
 				</div>
 				<div id="img-perfil">
 					<label>Imagen de perfil</label>
@@ -87,6 +87,37 @@
 				</div>
 			</form>
 		</div>
+
+		<% if (errores.email) { %>
+			<div class="error">
+				<%= errores.email.msg %>
+			</div>
+		<% } %>
+		<% if (errores.nombre_completo) { %>
+			<div class="error">
+				<%= errores.nombre_completo.msg %>
+			</div>
+		<% } %>
+		<% if (errores.password) { %>
+			<div class="error">
+				<%= errores.password.msg %>
+			</div>
+		<% } %>
+		<% if (errores.fecha) { %>
+			<div class="error">
+				<%= errores.fecha.msg %>
+			</div>
+		<% } %>
+		<% if (userExist !== '') { %>
+			<div class="error">
+				El email <strong><%= userExist %></strong> ya está en uso
+			</div>
+		<% } %>
+		<% if (sex) { %>
+			<div class="error">
+				Elija una opción de sexo
+			</div>
+		<% } %>
 
 	</div>
 

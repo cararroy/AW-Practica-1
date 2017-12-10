@@ -185,27 +185,50 @@ app.get("/edit", function(request, response) {
         if (err) {
             console.error(err);
         } else {
-            let sexo = ["", "", ""];
-            sexo[result.sexoNum] = "checked";
-            response.render("edit", {
+            let sex = ["", "", ""];
+            sex[result.sexoNum] = "checked";
+            var usuarioCorrecto = {
                 email: request.session.currentUser,
                 password: result.password,
                 name : result.nombre_completo,
                 fecha: result.fecha_nacimiento,
-                genero: sexo,
+                genero: sex,
                 puntuacion: result.puntuacion
-            });
+            };
+            response.render("edit", {errores: [], usuario: usuarioCorrecto, userExist: "", sex: false, genero: sex});
         }
     });
 });
 
 app.post("/edit", function(request, response) {
-    let email = daoU.editProfile(request.session.currentUser, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
-        if (err) {
-            console.error(err);
+    request.checkBody("nombre_completo", "Nombre de usuario vacío").notEmpty();
+    request.checkBody("nombre_completo", "Nombre de usuario no válido").matches(/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/); // Sólo letras y espacios
+    request.checkBody("password", "La contraseña no tiene entre 6 y 10 caracteres").isLength({ min: 6, max: 10 });
+    request.checkBody("fecha", "Fecha de nacimiento no válida").fechaValida();
+    request.getValidationResult().then((result) => {
+        let sex = ["", "", ""];
+        sex[request.body.sexo] = "checked";
+        var usuarioIncorrecto = {
+            name: request.body.nombre_completo,
+            password: request.body.password,
+            email: request.session.currentUser,
+            genero: sex,
+            fecha: request.body.fecha,
+            puntuacion: result.puntuacion
+        };
+        if (result.isEmpty()) {
+            let email = daoU.editProfile(request.session.currentUser, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    //request.session.currentUser = request.body.email;
+                    response.redirect("/my_profile");
+                }
+            });
+            
         } else {
-            //request.session.currentUser = request.body.email;
-            response.redirect("/my_profile");
+                        
+            response.render("edit", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: false, genero: sex});
         }
     });
 });
