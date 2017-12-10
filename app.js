@@ -79,7 +79,7 @@ app.listen(config.port, function (err) {
 });
 
 app.get("/login", function(request, response) {
-    response.render("login", { errorMsg : null });
+    response.render("login", { errorMsg : null, email: "", password: ""});
 });
 
 let daoU = new daoUsers.DAOUsers(pool);
@@ -90,7 +90,7 @@ app.post("/login", function(request, response) {
         if (err) {
             console.error(err);
         } else if (!existe) {
-            response.render("login", { errorMsg : "Dirección de correo y/o contraseña no válidas" });
+            response.render("login", { errorMsg : "Dirección de correo y/o contraseña no válidas", email: request.body.email, password: request.body.password});
         } else {
             request.session.currentUser = request.body.email;
             response.redirect("/my_profile");
