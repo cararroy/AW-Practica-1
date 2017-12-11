@@ -112,6 +112,8 @@ app.get("/friends", middleWareAccessControl, (request, response) => {
             console.error(err);
         }
         response.render("friends", {
+            name: result.nombre_completo,
+            puntuacion: result.puntuacion,
             friends: result
             // requests: result
         });
