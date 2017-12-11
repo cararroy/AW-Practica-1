@@ -1,0 +1,16 @@
+<%
+
+if (requests) {
+    requests.forEach(request => { %>
+        <div class="user-box">
+            <img src="img/man.png" alt="">
+            <h4><%= request.nombre_completo %></h4>
+            <form method="GET" id="" class="btn-solicitud" action="">
+                <input value="Aceptar" type="submit">
+                <input value="Rechazar" type="submit">
+            </form>
+        </div>
+    <% });
+}
+
+%>

@@ -31,8 +31,27 @@ class DAOFriends {
                 callback(err);
                 return;
             } else {
-                connection.query("SELECT img, nombre_completo FROM users as u JOIN friends as f WHERE f.email1=? AND f.email2 = u.email;", [email], (err, rows) => {
+                connection.query("SELECT img, nombre_completo FROM users as u JOIN friends as f WHERE f.email1=? AND f.email2 = u.email AND f.confirmado = 1;", [email], (err, rows) => {
                     connection.release();
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+                    callback(null, rows);
+                });
+            }
+        });
+    }
+
+    getAllRequests(email, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            } else {
+                connection.query("SELECT img, nombre_completo FROM users as u JOIN friends as f WHERE f.email1=? AND f.email2 = u.email AND f.confirmado = NULL;", [email], (err, rows) => {
+                    connection.release();
+                    console.log(rows);
                     if (err) {
                         callback(err);
                         return;

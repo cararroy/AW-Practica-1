@@ -107,16 +107,30 @@ app.get("/answer-other", function(request, response) {
 });
 
 app.get("/friends", middleWareAccessControl, (request, response) => {
-    let dataFriend = daoF.getAllFriends(request.session.currentUser, (err, result) => {
+    daoF.getAllFriends(request.session.currentUser, (err, result) => {
         if (err) {
             console.error(err);
-        } else {
-            response.render("friends", {
-                friends: result
-            });
         }
+        response.render("friends", {
+            friends: result
+            // requests: result
+        });
     });
 });
+
+/*
+app.get("/friends", middleWareAccessControl, (request, response) => {
+    daoF.getAllRequests(request.session.currentUser, (err, result) => { 
+        if (err) {
+            console.error(err);
+            console.log(result);
+        }
+        response.render("friends", {
+            requests: result
+        });
+    });
+});
+*/
 
 app.get("/my_profile", middleWareAccessControl, (request, response) => {
     let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
