@@ -31,7 +31,26 @@ class DAOFriends {
                 callback(err);
                 return;
             } else {
-                connection.query("SELECT * FROM users as u JOIN friends as f WHERE f.email1=? AND f.email2 = u.email AND f.confirmado = 1;", [email], (err, rows) => {
+                connection.query("SELECT * FROM users as u JOIN friends as f WHERE (f.email1=? OR f.email2=?) AND (f.email1 = u.email OR f.email2 = u.email) AND u.email<>? AND f.confirmado = 1", [email, email, email], (err, rows) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+                    callback(null, rows);
+                });
+            }
+        });
+    }
+
+    searchFriends(cadena, usuario, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            } else {
+                cadena = "%" + cadena + "%"; 
+                connection.query("SELECT nombre_completo FROM users WHERE nombre_completo LIKE ? AND email<>?", [cadena, usuario], (err, rows) => {
                     connection.release();
                     if (err) {
                         callback(err);

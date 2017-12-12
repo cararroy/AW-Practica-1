@@ -120,6 +120,24 @@ app.get("/friends", middleWareAccessControl, (request, response) => {
     });
 });
 
+app.get("/search", middleWareAccessControl, (request, response) => {
+    response.render("search", {resultado: {}, friends: []});
+});
+
+app.post("/search", middleWareAccessControl, (request, response) => {
+    let buscar = request.body.search.trim()
+    if (buscar !== '') {
+        daoF.searchFriends(buscar, request.session.currentUser, (err, result) => {
+            if (err) {
+                console.error(err);
+            }
+            response.render("search", {resultado: buscar, friends: result});
+        });
+    } else {
+        response.render("search", {resultado: '', friends: []});
+    }
+});
+
 /*
 app.get("/friends", middleWareAccessControl, (request, response) => {
     daoF.getAllRequests(request.session.currentUser, (err, result) => { 
