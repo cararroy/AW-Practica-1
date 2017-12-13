@@ -111,14 +111,15 @@ app.get("/answer-other", function(request, response) {
 });
 
 app.get("/friends", middleWareAccessControl, (request, response) => {
-    daoF.getAllFriends(request.session.currentUser, (err, result) => {
+    daoF.getAllFriends(request.session.currentUser, (err, rowsFriends, rowsRequests) => {
         if (err) {
             console.error(err);
         }
         response.render("friends", {
             name: request.session.name,
             puntuacion: request.session.puntuacion, 
-            friends: result
+            friends: rowsFriends,
+            requests: rowsRequests
             // requests: result
         });
     });

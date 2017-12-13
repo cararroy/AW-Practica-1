@@ -31,13 +31,19 @@ class DAOFriends {
                 callback(err);
                 return;
             } else {
-                connection.query("SELECT * FROM users as u JOIN friends as f WHERE (f.email1=? OR f.email2=?) AND (f.email1 = u.email OR f.email2 = u.email) AND u.email<>? AND f.confirmado = 1", [email, email, email], (err, rows) => {
-                    connection.release();
+                connection.query("SELECT * FROM users as u JOIN friends as f WHERE (f.email1=? OR f.email2=?) AND (f.email1 = u.email OR f.email2 = u.email) AND u.email<>? AND f.confirmado = 1", [email, email, email], (err, rowsFriends) => {
                     if (err) {
                         callback(err);
                         return;
                     }
-                    callback(null, rows);
+                    connection.query("SELECT * FROM users as u JOIN friends as f WHERE f.email2=? AND f.email1 = u.email AND u.email<>? AND f.confirmado = 0", [email, email, email], (err, rowsRequests) => {
+                        connection.release();
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
+                        callback(null, rowsFriends, rowsRequests);
+                    });
                 });
             }
         });
@@ -52,25 +58,6 @@ class DAOFriends {
                 cadena = "%" + cadena + "%"; 
                 connection.query("SELECT nombre_completo FROM users WHERE nombre_completo LIKE ? AND email<>?", [cadena, usuario], (err, rows) => {
                     connection.release();
-                    if (err) {
-                        callback(err);
-                        return;
-                    }
-                    callback(null, rows);
-                });
-            }
-        });
-    }
-
-    getAllRequests(email, callback) {
-        this.pool.getConnection((err, connection) => {
-            if (err) {
-                callback(err);
-                return;
-            } else {
-                connection.query("SELECT * FROM users as u JOIN friends as f WHERE f.email1=? AND f.email2 = u.email AND f.confirmado = NULL;", [email], (err, rows) => {
-                    connection.release();
-                    console.log(rows);
                     if (err) {
                         callback(err);
                         return;
