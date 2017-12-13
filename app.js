@@ -121,6 +121,34 @@ app.get("/friends", middleWareAccessControl, (request, response) => {
     });
 });
 
+app.post("/friends", middleWareAccessControl, (request, response) => {
+    if (request.body.action === 'Aceptar') {
+        daoF.acceptRequest(request.session.email, request.body.email, (err, result) => {
+            if (err) {
+                console.error(err);
+            }
+            if (result === true) {
+                // mostrar mensaje de exito de aceptado
+            } else {
+                // mostrar mensaje de error
+            }
+            response.render("friends");
+        });
+    } else {
+        daoF.denieRequest(request.session.email, request.body.email, (err, result) => {
+            if (err) {
+                console.error(err);
+            }
+            if (result == true) {
+                // mostrar mensaje de exito de rechazo
+            } else {
+                // mostrar mensaje de error
+            }
+            response.render("friends");
+        });
+    }
+});
+
 app.get("/search", middleWareAccessControl, (request, response) => {
     response.render("search", {name: request.session.name, puntuacion: request.session.puntuacion, resultado: {}, friends: []});
 });

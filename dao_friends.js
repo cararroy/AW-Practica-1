@@ -49,6 +49,40 @@ class DAOFriends {
         });
     }
 
+    acceptRequest(email1, email2, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("UPDATE friends SET confirmado=1 WHERE email1=? AND email2=?", [email1, email2], (err) => {
+                connection.release();
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                callback(null);
+            });
+        });
+    }
+
+    denieRequest(email1, email2, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("UPDATE friends SET confirmado=2 WHERE email1=? AND email2=?", [email1, email2], (err) => {
+                connection.release();
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                callback(null);
+            });
+        });
+    }
+
     searchFriends(cadena, usuario, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) {
