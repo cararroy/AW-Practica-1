@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Casper María Rodríguez</title>
+	<title><%= name %></title>
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/friends.css">
 </head>
@@ -19,35 +19,20 @@
 
 		<div id="solicitudes">
 
-			<div class="user-box">
-				<img src="img/man.png" alt="">
-				<h4>Casper María Rodríguez</h4>
-				<form method="POST" id="" class="btn-solicitud" action="">
-					
-					<input value="Aceptar" type="submit">
-					<input value="Rechazar" type="submit">
-				</form>
-
-			</div>
-			<div class="user-box">
-				<img src="img/man.png" alt="">
-				<h4>Casper María Rodríguez</h4>
-				<form method="POST" id="" class="btn-solicitud" action="">
-					
-					<input value="Aceptar" type="submit">
-					<input value="Rechazar" type="submit">
-				</form>
-			</div>
-			<div class="user-box">
-				<img src="img/man.png" alt="">
-				<h4>Casper María Rodríguez</h4>
-				<form method="POST" id="" class="btn-solicitud" action="">
-					
-					<input value="Aceptar" type="submit">
-					<input value="Rechazar" type="submit">
-				</form>
-			</div>
-
+			<%
+			if (requests) {
+				requests.forEach(request => { %>
+					<div class="user-box">
+						<img src="img/man.png" alt="">
+						<h4><%= request.nombre_completo %></h4>
+						<form method="POST" id="" class="btn-solicitud" action="/friends">
+							<input value="Aceptar" type="submit">
+							<input value="Rechazar" type="submit">
+						</form>
+					</div>
+				<% });
+			}
+			%>
 
 		</div>
 
