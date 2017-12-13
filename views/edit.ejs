@@ -9,30 +9,7 @@
 
 <body>
 
-	<!-- Header -->
-	<div id="Facebluf-header">
-		<div id="logo">
-			<img src="img/Logo.png" alt="">
-		</div>
-		<div id="menu-right">
-			<div id="menu">
-				<a href="#">Perfil</a>
-				<a href="#">Amigos</a>
-				<a href="#">Preguntas</a>
-				<a href="/logout">Desconectar</a>
-			</div>
-			<div id="usuario-banner">
-				<img class="purple-circle" width="32" height="32" src="img/man.png" alt="">
-				<div id="data-banner">
-					<p><%= usuario.name %></p>
-					<div id="banner-coins">
-						<img width="15" height="15" src="img/coins.png" alt="">
-						<span><%= usuario.puntuacion %> puntos</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<%- include("header_logged") %>
 
 	<!-- Contenedor principal -->
 	<div class="container">

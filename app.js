@@ -112,8 +112,8 @@ app.get("/friends", middleWareAccessControl, (request, response) => {
             console.error(err);
         }
         response.render("friends", {
-            name: result.nombre_completo,
-            puntuacion: result.puntuacion,
+            name: request.session.name,
+            puntuacion: request.session.puntuacion, 
             friends: result
             // requests: result
         });
@@ -121,7 +121,7 @@ app.get("/friends", middleWareAccessControl, (request, response) => {
 });
 
 app.get("/search", middleWareAccessControl, (request, response) => {
-    response.render("search", {resultado: {}, friends: []});
+    response.render("search", {name: request.session.name, puntuacion: request.session.puntuacion, resultado: {}, friends: []});
 });
 
 app.post("/search", middleWareAccessControl, (request, response) => {
@@ -131,10 +131,10 @@ app.post("/search", middleWareAccessControl, (request, response) => {
             if (err) {
                 console.error(err);
             }
-            response.render("search", {resultado: buscar, friends: result});
+            response.render("search", {name: request.session.name, puntuacion: request.session.puntuacion, resultado: buscar, friends: result});
         });
     } else {
-        response.render("search", {resultado: '', friends: []});
+        response.render("search", {name: request.session.name, puntuacion: request.session.puntuacion, resultado: '', friends: []});
     }
 });
 
@@ -157,6 +157,8 @@ app.get("/my_profile", middleWareAccessControl, (request, response) => {
         if (err) {
             console.error(err);
         } else {
+            request.session.name = result.nombre_completo;
+            request.session.puntuacion = result.puntuacion;
             response.render("my_profile", {
                 name : result.nombre_completo,
                 fecha_nacimiento: result.edad,
@@ -230,7 +232,7 @@ app.get("/edit", function(request, response) {
                 genero: sex,
                 puntuacion: result.puntuacion
             };
-            response.render("edit", {errores: [], usuario: usuarioCorrecto, userExist: "", sex: false, genero: sex});
+            response.render("edit", {name: request.session.name, puntuacion: request.session.puntuacion, errores: [], usuario: usuarioCorrecto, userExist: "", sex: false, genero: sex});
         }
     });
 });
@@ -263,67 +265,7 @@ app.post("/edit", function(request, response) {
             
         } else {
                         
-            response.render("edit", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: false, genero: sex});
-        }
-    });
-});
-
-app.get("/edit", function(request, response) {
-    let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
-        if (err) {
-            console.error(err);
-        } else {
-            let sexo = ["", "", ""];
-            sexo[result.sexoNum] = "checked";
-            response.render("edit", {
-                email: request.session.currentUser,
-                password: result.password,
-                name : result.nombre_completo,
-                fecha: result.fecha_nacimiento,
-                genero: sexo,
-                puntuacion: result.puntuacion
-            });
-        }
-    });
-});
-
-app.post("/edit", function(request, response) {
-    let email = daoU.editProfile(request.session.currentUser, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
-        if (err) {
-            console.error(err);
-        } else {
-            //request.session.currentUser = request.body.email;
-            response.redirect("/my_profile");
-        }
-    });
-});
-
-app.get("/edit", function(request, response) {
-    let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
-        if (err) {
-            console.error(err);
-        } else {
-            let sexo = ["", "", ""];
-            sexo[result.sexoNum] = "checked";
-            response.render("edit", {
-                email: request.session.currentUser,
-                password: result.password,
-                name : result.nombre_completo,
-                fecha: result.fecha_nacimiento,
-                genero: sexo,
-                puntuacion: result.puntuacion
-            });
-        }
-    });
-});
-
-app.post("/edit", function(request, response) {
-    let email = daoU.editProfile(request.session.currentUser, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
-        if (err) {
-            console.error(err);
-        } else {
-            //request.session.currentUser = request.body.email;
-            response.redirect("/my_profile");
+            response.render("edit", {name: request.session.name, puntuacion: request.session.puntuacion, errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: false, genero: sex});
         }
     });
 });
@@ -334,10 +276,6 @@ app.get("/question-view", function(request, response) {
 
 app.get("/random", function(request, response) {
     response.render("random");
-});
-
-app.get("/search", function(request, response) {
-    response.render("search");
 });
 
 app.get("/logout", function(request, response) {

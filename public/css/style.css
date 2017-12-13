@@ -227,3 +227,10 @@ input[type="submit"] {
 .radio input[type="radio"] + .radio-label:empty:before {
   margin-right: 0;
 }
+
+.purple-circle {
+    border: 1px dashed purple;
+    border-radius: 32px;
+    padding: 5px;
+    background-color: #e6e6e6;
+}
