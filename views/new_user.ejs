@@ -27,7 +27,7 @@
 
 		<!-- Formulario -->
 		<div id="login-box">
-			<form action="/new_user" method="POST">
+			<form action="/new_user" method="POST" enctype="multipart/form-data">
 				<div>
 					<label>Email</label>
 					<input type="email" name="email" value="<%= usuario.email %>">
@@ -66,7 +66,7 @@
 				</div>
 				<div id="img-perfil">
 					<label>Imagen de perfil</label>
-					<input type="file" name="imagen_perfil" disabled>
+					<input type="file" name="foto" id="inputImagen">
 				</div>
 				<div class="submit">
 					<input type="submit" value="Crear usuario" class="light-button">
