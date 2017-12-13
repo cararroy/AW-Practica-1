@@ -11,6 +11,10 @@ const daoFriends = require("./dao_friends");
 const expressSession = require("express-session");
 const expressMysqlSession = require("express-mysql-session");
 var expressValidator = require("express-validator");
+const multer = require("multer");
+const fs = require("fs");
+
+const upload = multer({ dest: path.join(__dirname, "uploads") });
 
 const MySQLStore = expressMysqlSession(expressSession);
 
@@ -198,11 +202,15 @@ app.get("/my_profile", middleWareAccessControl, (request, response) => {
     });
 });
 
+app.get("/imagen/:id", (request, response) => {
+    response.sendFile(path.join(__dirname, "uploads", request.params.id));
+});
+
 app.get("/new_user", function(request, response) {
     response.render("new_user", {errores: [], usuario: {}, userExist: "", sex: false, genero: ["", "", ""]});
 });
 
-app.post("/new_user", function(request, response) {
+app.post("/new_user", upload.single("foto"), function(request, response) {
     request.checkBody("nombre_completo", "Nombre de usuario vacío").notEmpty();
     request.checkBody("nombre_completo", "Nombre de usuario no válido").matches(/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/); // Sólo letras y espacios
     request.checkBody("password", "La contraseña no tiene entre 6 y 10 caracteres").isLength({ min: 6, max: 10 });
@@ -241,7 +249,7 @@ app.post("/new_user", function(request, response) {
             if (request.body.sexo === undefined)
                 sexoMsg = true;
             
-            response.render("new_user", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: sexoMsg, genero: sex});
+            response.render("new_user", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: sexoMsg, genero: sex, imagen: request.file ? request.file.filename : ""});
         }
     });
 });

@@ -1,7 +1,7 @@
 {
   "name": "package",
   "version": "1.0.0",
-  "description": "",
+  "description": "no",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cararroy/AW-Practica-1.git"
+    "url": "https://github.com/cararroy/AW-Practica-1.git",
+    "private": true
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +25,7 @@
     "express-mysql-session": "^1.2.3",
     "express-session": "^1.15.6",
     "express-validator": "^4.3.0",
+    "multer": "^1.3.0",
     "mysql": "^2.15.0"
   }
 }
