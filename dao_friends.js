@@ -83,6 +83,23 @@ class DAOFriends {
         });
     }
 
+    requestFriendship(email1, email2, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("INSERT INTO friends VALUES (?, ?, 0)", [email1, email2], (err) => {
+                connection.release();
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                callback(null);
+            });
+        });
+    }
+
     searchFriends(cadena, usuario, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) {
@@ -90,7 +107,7 @@ class DAOFriends {
                 return;
             } else {
                 cadena = "%" + cadena + "%"; 
-                connection.query("SELECT nombre_completo, img FROM users WHERE nombre_completo LIKE ? AND email<>?", [cadena, usuario], (err, rows) => {
+                connection.query("SELECT nombre_completo, img, email FROM users WHERE nombre_completo LIKE ? AND email<>?", [cadena, usuario], (err, rows) => {
                     connection.release();
                     if (err) {
                         callback(err);
