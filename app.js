@@ -5,12 +5,11 @@ const mysql = require("mysql");
 const path = require("path");
 const bodyParser = require("body-parser");
 const config = require("./config");
-//const daoTasks = require("./dao_tasks");
 const daoUsers = require("./dao_users");
 const daoFriends = require("./dao_friends");
 const expressSession = require("express-session");
 const expressMysqlSession = require("express-mysql-session");
-var expressValidator = require("express-validator");
+const expressValidator = require("express-validator");
 const multer = require("multer");
 const fs = require("fs");
 
@@ -66,7 +65,6 @@ app.use(middlewareSession);
 // Middleware de Control de Acceso
 function middleWareAccessControl (request, response, next) {
     if(request.session.currentUser) {
-        response.locals.userEmail = request.session.currentUser;
         next();
     } else {
         response.redirect("/login");
@@ -82,12 +80,16 @@ app.listen(config.port, function (err) {
     }
 });
 
+// DAO's
+let daoU = new daoUsers.DAOUsers(pool);
+let daoF = new daoFriends.DAOFriends(pool);
+
+
+// Manejadores de ruta LOGIN
+
 app.get("/login", function(request, response) {
     response.render("login", { errorMsg : null, email: "", password: ""});
 });
-
-let daoU = new daoUsers.DAOUsers(pool);
-let daoF = new daoFriends.DAOFriends(pool);
 
 app.post("/login", function(request, response) {
     let email = daoU.isUserCorrect(request.body.email, request.body.password, (err, existe) => {
@@ -96,109 +98,14 @@ app.post("/login", function(request, response) {
         } else if (!existe) {
             response.render("login", { errorMsg : "Dirección de correo y/o contraseña no válidas", email: request.body.email, password: request.body.password});
         } else {
+            // Atributo de sesión para saber en todo momento qué usuario está logeado
             request.session.currentUser = request.body.email;
             response.redirect("/my_profile");
         }
     });
 });
 
-app.get("/answer", function(request, response) {
-    response.render("answer");
-});
-
-app.get("/answer-other", function(request, response) {
-    response.render("answer_other");
-});
-
-app.get("/friends", middleWareAccessControl, (request, response) => {
-    daoF.getAllFriends(request.session.currentUser, (err, rowsFriends, rowsRequests) => {
-        if (err) {
-            console.error(err);
-        }
-        response.render("friends", {
-            name: request.session.name,
-            puntuacion: request.session.puntuacion, 
-            friends: rowsFriends,
-            requests: rowsRequests
-        });
-    });
-});
-
-app.post("/friends", middleWareAccessControl, (request, response) => {
-    if (request.body.action === 'Aceptar') {
-        daoF.acceptRequest(request.body.email, response.locals.userEmail, (err) => {
-            if (err) {
-                console.error(err);
-            }
-            response.redirect("friends");
-        });
-    } else {
-        daoF.denieRequest(request.body.email, response.locals.userEmail, (err) => {
-            if (err) {
-                console.error(err);
-            }
-            response.redirect("friends");
-        });
-    }
-});
-
-app.post("/requestFriendship", middleWareAccessControl, (request, response) => {
-    daoF.requestFriendship(response.locals.userEmail, request.body.email, (err) => {
-        if (err) {
-            console.error(err);
-        }
-        response.redirect("friends");
-    });
-});
-
-app.get("/search", middleWareAccessControl, (request, response) => {
-    response.render("search", {name: request.session.name, puntuacion: request.session.puntuacion, resultado: {}, friends: []});
-});
-
-app.post("/search", middleWareAccessControl, (request, response) => {
-    let buscar = request.body.search.trim()
-    if (buscar !== '') {
-        daoF.searchFriends(buscar, request.session.currentUser, (err, result) => {
-            if (err) {
-                console.error(err);
-            }
-            response.render("search", {name: request.session.name, puntuacion: request.session.puntuacion, resultado: buscar, friends: result});
-        });
-    } else {
-        response.render("search", {name: request.session.name, puntuacion: request.session.puntuacion, resultado: '', friends: []});
-    }
-});
-
-/*
-app.get("/friends", middleWareAccessControl, (request, response) => {
-    daoF.getAllRequests(request.session.currentUser, (err, result) => { 
-        if (err) {
-            console.error(err);
-            console.log(result);
-        }
-        response.render("friends", {
-            requests: result
-        });
-    });
-});
-*/
-
-app.get("/my_profile", middleWareAccessControl, (request, response) => {
-    let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
-        if (err) {
-            console.error(err);
-        } else {
-            request.session.name = result.nombre_completo;
-            request.session.puntuacion = result.puntuacion;
-            response.render("my_profile", {
-                name : result.nombre_completo,
-                fecha_nacimiento: result.edad,
-                genero: result.genero,
-                puntuacion: result.puntuacion
-            });
-        }
-    });
-});
+// Manejadores de ruta SIGNUP
 
 app.get("/new_user", function(request, response) {
     response.render("new_user", {errores: [], usuario: {}, userExist: "", sex: false, genero: ["", "", ""]});
@@ -248,12 +155,35 @@ app.post("/new_user", upload.single("foto"), function(request, response) {
             if (request.body.sexo === undefined)
                 sexoMsg = true;
             
-            response.render("new_user", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: sexoMsg, genero: sex, imagen: request.file ? request.file.filename : ""});
+            response.render("new_user", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: sexoMsg, genero: sex});
         }
     });
 });
 
-app.get("/edit", function(request, response) {
+// Manejador de ruta MY_PROFILE
+
+app.get("/my_profile", middleWareAccessControl, (request, response) => {
+    let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
+        if (err) {
+            console.error(err);
+        } else {
+
+            // De estas variables obtenemos los datos del usuario en las vistas
+            app.locals.name = result.nombre_completo;
+            app.locals.puntuacion = result.puntuacion;
+            app.locals.img = result.img;
+
+            response.render("my_profile", {
+                fecha_nacimiento: result.edad,
+                genero: result.genero
+            });
+        }
+    });
+});
+
+// Manejadores de ruta EDIT_PROFILE
+
+app.get("/edit", middleWareAccessControl, function(request, response) {
     let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
         if (err) {
             console.error(err);
@@ -268,12 +198,12 @@ app.get("/edit", function(request, response) {
                 genero: sex,
                 puntuacion: result.puntuacion
             };
-            response.render("edit", {name: request.session.name, puntuacion: request.session.puntuacion, errores: [], usuario: usuarioCorrecto, userExist: "", sex: false, genero: sex});
+            response.render("edit", {errores: [], usuario: usuarioCorrecto, userExist: "", sex: false, genero: sex});
         }
     });
 });
 
-app.post("/edit", upload.single("foto"), function(request, response) {
+app.post("/edit", middleWareAccessControl, upload.single("foto"), function(request, response) {
     let img;
     if (!request.file)
         img = "mantener";
@@ -301,16 +231,104 @@ app.post("/edit", upload.single("foto"), function(request, response) {
                 if (err) {
                     console.error(err);
                 } else {
-                    //request.session.currentUser = request.body.email;
                     response.redirect("/my_profile");
                 }
             });
             
         } else {
                         
-            response.render("edit", {name: request.session.name, puntuacion: request.session.puntuacion, errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: false, genero: sex});
+            response.render("edit", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: "", sex: false, genero: sex});
         }
     });
+});
+
+// Manejador de ruta FRIENDS
+
+app.get("/friends", middleWareAccessControl, (request, response) => {
+    daoF.getAllFriends(request.session.currentUser, (err, rowsFriends, rowsRequests) => {
+        if (err) {
+            console.error(err);
+        }
+        response.render("friends", {
+            friends: rowsFriends,
+            requests: rowsRequests
+        });
+    });
+});
+
+////// ACEPTAR O RECHAZAR AMISTAD ¿?¿?¿? -> response.locals¿?
+
+app.post("/friends", middleWareAccessControl, (request, response) => {
+    if (request.body.action === 'Aceptar') {
+        daoF.acceptRequest(request.body.email, response.locals.userEmail, (err) => {
+            if (err) {
+                console.error(err);
+            }
+            response.redirect("friends");
+        });
+    } else {
+        daoF.denieRequest(request.body.email, response.locals.userEmail, (err) => {
+            if (err) {
+                console.error(err);
+            }
+            response.redirect("friends");
+        });
+    }
+});
+
+// Manejadores de ruta SEARCH_USERS
+
+app.get("/search", middleWareAccessControl, (request, response) => {
+    response.render("search", {resultado: '', friends: []});
+});
+
+app.post("/search", middleWareAccessControl, (request, response) => {
+    let buscar = request.body.search.trim()
+    if (buscar !== '') {
+        daoF.searchFriends(buscar, request.session.currentUser, (err, result) => {
+            if (err) {
+                console.error(err);
+            }
+            response.render("search", {resultado: buscar, friends: result});
+        });
+    } else {
+        response.redirect("/search");
+    }
+});
+
+// Manejadores de ruta REQUESTS_FRIENDSHIP -> response.locals¿?
+
+app.post("/requestFriendship", middleWareAccessControl, (request, response) => {
+    daoF.requestFriendship(response.locals.userEmail, request.body.email, (err) => {
+        if (err) {
+            console.error(err);
+        }
+        response.redirect("friends");
+    });
+});
+
+// Manejador de ruta LOGOUT
+
+app.get("/logout", function(request, response) {
+    request.session.destroy();
+    response.redirect("/login");
+});
+
+// Manejador de ruta GET_IMG_PROFILE
+
+app.get("/imagen/:filename", middleWareAccessControl, (request, response) => {
+    response.sendFile(path.join(__dirname, "uploads", request.params.filename));
+});
+
+
+// Manejadores de ruta sin implementar
+
+app.get("/answer", function(request, response) {
+    response.render("answer");
+});
+
+app.get("/answer-other", function(request, response) {
+    response.render("answer_other");
 });
 
 app.get("/question-view", function(request, response) {
@@ -319,25 +337,4 @@ app.get("/question-view", function(request, response) {
 
 app.get("/random", function(request, response) {
     response.render("random");
-});
-
-app.get("/logout", function(request, response) {
-    request.session.destroy();
-    response.redirect("/login");
-});
-
-app.get("/user_image/", (request, response) => {
-    daoU.getUserImageName(request.session.currentUser, (err, cadena) => {
-        if (err || cadena === null) {
-            let img = __dirname.concat("/public/img/NoProfile.png");
-            response.sendFile(img);
-        } else {
-            let img = __dirname.concat("/uploads/".concat(cadena));
-            response.sendFile(img);
-        }
-    });
-});
-
-app.get("/imagen/:filename", (request, response) => {
-    response.sendFile(path.join(__dirname, "uploads", request.params.filename));
 });
