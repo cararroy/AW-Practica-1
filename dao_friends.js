@@ -90,7 +90,7 @@ class DAOFriends {
                 return;
             } else {
                 cadena = "%" + cadena + "%"; 
-                connection.query("SELECT nombre_completo FROM users WHERE nombre_completo LIKE ? AND email<>?", [cadena, usuario], (err, rows) => {
+                connection.query("SELECT nombre_completo, img FROM users WHERE nombre_completo LIKE ? AND email<>?", [cadena, usuario], (err, rows) => {
                     connection.release();
                     if (err) {
                         callback(err);

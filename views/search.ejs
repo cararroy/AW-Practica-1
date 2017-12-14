@@ -23,7 +23,7 @@
 			if (friends) {
 				friends.forEach(friend => { %>
 					<div class="user-box">
-						<img src="img/man.png" alt="">
+						<img src="/imagen/<%= friend.img %>" alt="">
 						<h4><%= friend.nombre_completo %></h4>
 						<form method="POST" id="" class="btn-solicitud" action="">
 							<input value="Solicitar amistad" type="submit">

@@ -105,16 +105,31 @@ class DAOUsers {
                     connection.release();
                     callback(err);
                 }
-                connection.query("UPDATE facebluff.users SET password=?, img=?, nombre_completo=?, genero=?, fecha_nacimiento=? WHERE email=?", 
-                [password, img, nombre_completo, genero, fecha_nacimiento, email], (err) => {
-                    if (err) {
-                        connection.release();
-                        callback(err);
-                    } else {
-                        connection.release();
-                        callback(null);
-                    }
-                });
+                if (img === "mantener") {
+                    connection.query("UPDATE facebluff.users SET password=?, nombre_completo=?, genero=?, fecha_nacimiento=? WHERE email=?", 
+                    [password, nombre_completo, genero, fecha_nacimiento, email], (err) => {
+                        if (err) {
+                            connection.release();
+                            callback(err);
+                        } else {
+                            connection.release();
+                            callback(null);
+                        }
+                    });
+                }
+                else {
+                    connection.query("UPDATE facebluff.users SET password=?, img=?, nombre_completo=?, genero=?, fecha_nacimiento=? WHERE email=?", 
+                    [password, img, nombre_completo, genero, fecha_nacimiento, email], (err) => {
+                        if (err) {
+                            connection.release();
+                            callback(err);
+                        } else {
+                            connection.release();
+                            callback(null);
+                        }
+                    });
+                }
+                
             });
         } else {
             callback(null);

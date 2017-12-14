@@ -23,7 +23,7 @@
 			if (requests) {
 				requests.forEach(request => { %>
 					<div class="user-box">
-						<img src="img/man.png" alt="">
+						<img src="/imagen/<%= request.img %>" alt="">
 						<h4><%= request.nombre_completo %></h4>
 						<form method="POST" id="" class="btn-solicitud" action="/friends">
 							<input value="Aceptar" type="submit">

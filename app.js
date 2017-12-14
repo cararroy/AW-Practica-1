@@ -202,10 +202,6 @@ app.get("/my_profile", middleWareAccessControl, (request, response) => {
     });
 });
 
-app.get("/imagen/:id", (request, response) => {
-    response.sendFile(path.join(__dirname, "uploads", request.params.id));
-});
-
 app.get("/new_user", function(request, response) {
     response.render("new_user", {errores: [], usuario: {}, userExist: "", sex: false, genero: ["", "", ""]});
 });
@@ -233,7 +229,12 @@ app.post("/new_user", upload.single("foto"), function(request, response) {
                 } else if (userExists) { // Email ya existente en la base de datos
                     response.render("new_user", {errores: result.mapped(), usuario: usuarioIncorrecto, userExist: request.body.email, sex: false, genero: sex});
                 } else { // Email valido
-                    daoU.insertUser(request.body.email, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
+                    let img;
+                    if (request.file === undefined)
+                        img = "NoProfile";
+                    else
+                        img = request.file.filename;
+                    daoU.insertUser(request.body.email, request.body.password, img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
                         if (err) { 
                             console.error(err);
                         } else {
@@ -274,7 +275,12 @@ app.get("/edit", function(request, response) {
     });
 });
 
-app.post("/edit", function(request, response) {
+app.post("/edit", upload.single("foto"), function(request, response) {
+    let img;
+    if (!request.file)
+        img = "mantener";
+    else
+        img = request.file.filename;
     request.checkBody("nombre_completo", "Nombre de usuario vacío").notEmpty();
     request.checkBody("nombre_completo", "Nombre de usuario no válido").matches(/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/); // Sólo letras y espacios
     request.checkBody("password", "La contraseña no tiene entre 6 y 10 caracteres").isLength({ min: 6, max: 10 });
@@ -288,10 +294,12 @@ app.post("/edit", function(request, response) {
             email: request.session.currentUser,
             genero: sex,
             fecha: request.body.fecha,
-            puntuacion: result.puntuacion
+            puntuacion: result.puntuacion,
+            imagen: img
         };
         if (result.isEmpty()) {
-            let email = daoU.editProfile(request.session.currentUser, request.body.password, request.body.img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
+            
+            let email = daoU.editProfile(request.session.currentUser, request.body.password, img, request.body.nombre_completo, request.body.sexo, request.body.fecha, (err) => {
                 if (err) {
                     console.error(err);
                 } else {
@@ -320,14 +328,18 @@ app.get("/logout", function(request, response) {
     response.redirect("/login");
 });
 
-app.get("/user_image", (request, response) => {
+app.get("/user_image/", (request, response) => {
     daoU.getUserImageName(request.session.currentUser, (err, cadena) => {
         if (err || cadena === null) {
             let img = __dirname.concat("/public/img/NoProfile.png");
             response.sendFile(img);
         } else {
-            let img = __dirname.concat("/public/icons/".concat(cadena));
+            let img = __dirname.concat("/uploads/".concat(cadena));
             response.sendFile(img);
         }
     });
+});
+
+app.get("/imagen/:filename", (request, response) => {
+    response.sendFile(path.join(__dirname, "uploads", request.params.filename));
 });
