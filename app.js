@@ -120,37 +120,35 @@ app.get("/friends", middleWareAccessControl, (request, response) => {
             puntuacion: request.session.puntuacion, 
             friends: rowsFriends,
             requests: rowsRequests
-            // requests: result
         });
     });
 });
 
 app.post("/friends", middleWareAccessControl, (request, response) => {
     if (request.body.action === 'Aceptar') {
-        daoF.acceptRequest(request.session.email, request.body.email, (err, result) => {
+        daoF.acceptRequest(request.body.email, response.locals.userEmail, (err) => {
             if (err) {
                 console.error(err);
             }
-            if (result === true) {
-                // mostrar mensaje de exito de aceptado
-            } else {
-                // mostrar mensaje de error
-            }
-            response.render("friends");
+            response.redirect("friends");
         });
     } else {
-        daoF.denieRequest(request.session.email, request.body.email, (err, result) => {
+        daoF.denieRequest(request.body.email, response.locals.userEmail, (err) => {
             if (err) {
                 console.error(err);
             }
-            if (result == true) {
-                // mostrar mensaje de exito de rechazo
-            } else {
-                // mostrar mensaje de error
-            }
-            response.render("friends");
+            response.redirect("friends");
         });
     }
+});
+
+app.post("/requestFriendship", middleWareAccessControl, (request, response) => {
+    daoF.requestFriendship(response.locals.userEmail, request.body.email, (err) => {
+        if (err) {
+            console.error(err);
+        }
+        response.redirect("friends");
+    });
 });
 
 app.get("/search", middleWareAccessControl, (request, response) => {

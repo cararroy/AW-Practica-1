@@ -26,8 +26,14 @@
 						<img src="img/man.png" alt="">
 						<h4><%= request.nombre_completo %></h4>
 						<form method="POST" id="" class="btn-solicitud" action="/friends">
-							<input value="Aceptar" type="submit">
-							<input value="Rechazar" type="submit">
+							<input type="submit" value="Aceptar">
+							<input type="hidden" value="Aceptar" name="action">
+							<input type="hidden" value="<%= request.email %>" name="email">
+						</form>
+						<form method="POST" id="" class="btn-solicitud" action="/friends">
+							<input type="submit" value="Rechazar">
+							<input type="hidden" value="Rechazar" name="action">
+							<input type="hidden" value="<%= request.email %>" name="email">
 						</form>
 					</div>
 				<% });
