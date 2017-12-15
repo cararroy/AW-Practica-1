@@ -36,7 +36,7 @@ class DAOFriends {
                         callback(err);
                         return;
                     }
-                    connection.query("SELECT * FROM users as u JOIN friends as f WHERE f.email2=? AND f.email1 = u.email AND u.email<>? AND f.confirmado = 0", [email, email, email], (err, rowsRequests) => {
+                    connection.query("SELECT * FROM users as u JOIN friends as f WHERE (f.email1=? OR f.email2=?) AND (f.email1 = u.email OR f.email2 = u.email) AND u.email<>? AND f.confirmado = 0", [email, email, email], (err, rowsRequests) => {
                         connection.release();
                         if (err) {
                             callback(err);
@@ -107,7 +107,7 @@ class DAOFriends {
                 return;
             } else {
                 cadena = "%" + cadena + "%"; 
-                connection.query("SELECT nombre_completo, img, email FROM users WHERE nombre_completo LIKE ? AND email<>?", [cadena, usuario], (err, rows) => {
+                connection.query("SELECT nombre_completo, img, email FROM users WHERE nombre_completo LIKE ? AND email<>? AND email NOT IN (SELECT email FROM users as u JOIN friends as f WHERE (f.email1=? OR f.email2=?) AND (f.email1 = u.email OR f.email2 = u.email))", [cadena, usuario, usuario, usuario, usuario], (err, rows) => {
                     connection.release();
                     if (err) {
                         callback(err);
