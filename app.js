@@ -14,7 +14,7 @@ const multer = require("multer");
 const fs = require("fs");
 
 const upload = multer({ dest: path.join(__dirname, "uploads") });
-
+const ficherosEstaticos = path.join(__dirname, "public");
 const MySQLStore = expressMysqlSession(expressSession);
 
 const sessionStore = new MySQLStore({
@@ -26,13 +26,11 @@ const sessionStore = new MySQLStore({
 
 const app = express();
 
-const ficherosEstaticos = path.join(__dirname, "public");
-
 app.use(express.static(ficherosEstaticos));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator({
     customValidators: {
-        // funciones personalizadas para validar
+        // Funciones personalizadas para validar
         fechaValida: function(param) {
             
             if(param === "" || param < new Date().toLocaleDateString("es-ES", {year: "numeric", month: "2-digit", day: "2-digit"}))
@@ -260,14 +258,14 @@ app.get("/friends", middleWareAccessControl, (request, response) => {
 
 app.post("/friends", middleWareAccessControl, (request, response) => {
     if (request.body.action === 'Aceptar') {
-        daoF.acceptRequest(request.body.email, response.locals.userEmail, (err) => {
+        daoF.acceptRequest(request.body.email, request.session.currentUser, (err) => {
             if (err) {
                 console.error(err);
             }
             response.redirect("friends");
         });
     } else {
-        daoF.denieRequest(request.body.email, response.locals.userEmail, (err) => {
+        daoF.denieRequest(request.body.email, request.session.currentUser, (err) => {
             if (err) {
                 console.error(err);
             }
@@ -296,10 +294,10 @@ app.post("/search", middleWareAccessControl, (request, response) => {
     }
 });
 
-// Manejadores de ruta REQUESTS_FRIENDSHIP -> response.locals¿?
+// Manejadores de ruta REQUESTS_FRIENDSHIP
 
 app.post("/requestFriendship", middleWareAccessControl, (request, response) => {
-    daoF.requestFriendship(response.locals.userEmail, request.body.email, (err) => {
+    daoF.requestFriendship(request.session.currentUser, request.body.email, (err) => {
         if (err) {
             console.error(err);
         }
