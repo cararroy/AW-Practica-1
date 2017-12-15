@@ -76,12 +76,9 @@ function middleWareAccessControl (request, response, next) {
                 response.locals.name = result.nombre_completo;
                 response.locals.puntuacion = result.puntuacion;
                 response.locals.img = result.img;
-                console.log(request.url);
-                console.log(response.locals);
                 next();
             }
         });
-        //
         
     } else {
         response.redirect("/login");
@@ -338,7 +335,6 @@ app.get("/friend_profile", middleWareAccessControl, (request, response) => {
         if (err) {
             console.error(err);
         } else {
-            console.log("hola");
             response.render("friend_profile", {
                 friend_name: result.nombre_completo,
                 friend_img: result.img,
