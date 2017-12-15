@@ -12,6 +12,7 @@ const expressMysqlSession = require("express-mysql-session");
 const expressValidator = require("express-validator");
 const multer = require("multer");
 const fs = require("fs");
+const morgan = require("morgan");
 
 const upload = multer({ dest: path.join(__dirname, "uploads") });
 const ficherosEstaticos = path.join(__dirname, "public");
@@ -26,6 +27,7 @@ const sessionStore = new MySQLStore({
 
 const app = express();
 
+app.use(morgan("dev"));
 app.use(express.static(ficherosEstaticos));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator({
@@ -63,7 +65,24 @@ app.use(middlewareSession);
 // Middleware de Control de Acceso
 function middleWareAccessControl (request, response, next) {
     if(request.session.currentUser) {
-        next();
+        //
+        let dataUser = daoU.getUserProfile(request.session.currentUser, (err, result) => {
+            if (err) {
+                console.error(err);
+                response.end(err.message);
+            } else {
+    
+                // De estas variables obtenemos los datos del usuario en las vistas
+                response.locals.name = result.nombre_completo;
+                response.locals.puntuacion = result.puntuacion;
+                response.locals.img = result.img;
+                console.log(request.url);
+                console.log(response.locals);
+                next();
+            }
+        });
+        //
+        
     } else {
         response.redirect("/login");
     }
@@ -165,12 +184,6 @@ app.get("/my_profile", middleWareAccessControl, (request, response) => {
         if (err) {
             console.error(err);
         } else {
-
-            // De estas variables obtenemos los datos del usuario en las vistas
-            app.locals.name = result.nombre_completo;
-            app.locals.puntuacion = result.puntuacion;
-            app.locals.img = result.img;
-
             response.render("my_profile", {
                 fecha_nacimiento: result.edad,
                 genero: result.genero
