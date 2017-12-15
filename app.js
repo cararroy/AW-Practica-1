@@ -12,7 +12,7 @@ const expressMysqlSession = require("express-mysql-session");
 const expressValidator = require("express-validator");
 const multer = require("multer");
 const fs = require("fs");
-const morgan = require("morgan");
+//const morgan = require("morgan");
 
 const upload = multer({ dest: path.join(__dirname, "uploads") });
 const ficherosEstaticos = path.join(__dirname, "public");
@@ -27,7 +27,7 @@ const sessionStore = new MySQLStore({
 
 const app = express();
 
-app.use(morgan("dev"));
+//app.use(morgan("dev"));
 app.use(express.static(ficherosEstaticos));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator({
@@ -331,6 +331,24 @@ app.get("/imagen/:filename", middleWareAccessControl, (request, response) => {
     response.sendFile(path.join(__dirname, "uploads", request.params.filename));
 });
 
+// Manejador de ruta FRIEND_PROFILE
+
+app.get("/friend_profile", middleWareAccessControl, (request, response) => {
+    let dataUser = daoU.getUserProfile(request.query.friendEmail, (err, result) => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log("hola");
+            response.render("friend_profile", {
+                friend_name: result.nombre_completo,
+                friend_img: result.img,
+                friend_puntuacion: result.puntuacion,
+                friend_fecha_nacimiento: result.edad,
+                friend_genero: result.genero
+            });
+        }
+    });
+});
 
 // Manejadores de ruta sin implementar
 
