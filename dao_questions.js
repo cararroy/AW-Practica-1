@@ -39,16 +39,14 @@ class DAOQuestions {
                 if (err) {
                     callback(err);
                     return;
-                } else if (question.texto_pregunta !== 0) {
-                    console.log("entro aqui");
+                } else if (options.length !== 0) {
                     let arrayInterrogaciones = [];
                     let arrayInsert = [];
-                    for (let i = 0; i < question.texto_pregunta; i++) {
+                    for (let i = 0; i < options.length; i++) {
                         arrayInterrogaciones.push("(?, ?)");
                         arrayInsert.push(result.insertId);
-                        arrayInsert.push(question.texto_pregunta[i]);
+                        arrayInsert.push(options[i]);
                     }
-                    console.log("arrayInterrogaciones" + arrayInterrogaciones);
                     let cadenaInsert = "INSERT INTO answer_options(id_question, texto_respuesta) VALUES " + arrayInterrogaciones.join(",");
                     connection.query(cadenaInsert, arrayInsert, (err, result) => {
                         if (err) {

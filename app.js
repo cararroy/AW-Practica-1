@@ -354,8 +354,9 @@ app.get("/new_question", middleWareAccessControl, (request, response) => {
     response.render("new_question");
 });
 
-app.post("/new_question", middleWareAccessControl, (request, response) => {    
-    daoQ.newQuestion(request.body.question, request.body.options, (err, result) => {
+app.post("/new_question", middleWareAccessControl, (request, response) => {  
+    let arrayRespuestas = request.body.options.match(/^.*((\r\n|\n|\r)|$)/gm);
+    daoQ.newQuestion(request.body.question, arrayRespuestas, (err, result) => {
         if (err) {
             console.error(err);
         }
