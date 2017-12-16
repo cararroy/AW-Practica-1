@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Crear pegunta - Facebluf</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+	<%- include("header_logged") %>
+
+	<!-- Contenedor principal -->
+	<div class="container">
+
+		<h1>Nueva pregunta</h1>
+
+		<!-- Formulario -->
+		<div id="login-box">
+			<form action="/new_question" method="POST">
+				<div>
+					<label>Pregunta</label>
+					<input type="test" name="question" value="">
+				</div>
+				<p class="txt-center">Respuestas (una por linea)</p>	
+				<div>									
+					<textarea rows="8" cols="70" name="options"></textarea>
+				</div>
+				<div class="submit">
+					<input type="submit" value="Crear pregunta" class="light-button">
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+</body>
+
+</html>

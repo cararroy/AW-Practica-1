@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const config = require("./config");
 const daoUsers = require("./dao_users");
 const daoFriends = require("./dao_friends");
+const daoQuestions = require("./dao_questions");
 const expressSession = require("express-session");
 const expressMysqlSession = require("express-mysql-session");
 const expressValidator = require("express-validator");
@@ -97,6 +98,7 @@ app.listen(config.port, function (err) {
 // DAO's
 let daoU = new daoUsers.DAOUsers(pool);
 let daoF = new daoFriends.DAOFriends(pool);
+let daoQ = new daoQuestions.DAOQuestions(pool);
 
 
 // Manejadores de ruta LOGIN
@@ -343,6 +345,21 @@ app.get("/friend_profile", middleWareAccessControl, (request, response) => {
                 friend_genero: result.genero
             });
         }
+    });
+});
+
+// Manejadores de ruta NEW_QUESTION
+
+app.get("/new_question", middleWareAccessControl, (request, response) => {
+    response.render("new_question");
+});
+
+app.post("/new_question", middleWareAccessControl, (request, response) => {
+    daoQ.newQuestion(request.body.question, request.body.options, (err, result) => {
+        if (err) {
+            console.error(err);
+        }
+        response.redirect("/new_question");
     });
 });
 
