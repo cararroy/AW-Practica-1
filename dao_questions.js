@@ -39,7 +39,29 @@ class DAOQuestions {
                 if (err) {
                     callback(err);
                     return;
+                } else if (questions.texto_pregunta !== 0) {
+                    let arrayInterrogaciones = [];
+                    let arrayInsert = [];
+                    for (let i = 0; i < questions.texto_pregunta; i++) {
+                        arrayInterrogaciones.push("(?, ?)");
+                        arrayInsert.push(result.insertId);
+                        arrayInsert.push(question.texto_pregunta[i]);
+                    }
+                    let cadenaInsert = "INSERT INTO answer_options(id_question, texto_respuesta) VALUES " + arrayInterrogaciones.join(",");
+                    connection.query(cadenaInsert, arrayInsert, (err, result) => {
+                        if (err) {
+                            callback(err);
+                            return;
+                        } else {
+                            callback(null);
+                        }
+                    });
+                } else {
+                    connection.release();
+                    callback(err);
                 }
+
+                /*
                 else {
                     // insertar respuestas en tabla answer_options con el id de la pregunta insertada arriba
                     connection.query("INSERT INTO answer_options(id_question, texto_respuesta) VALUES (?, ?)", [result.insertId, options], (err) => {
@@ -51,6 +73,7 @@ class DAOQuestions {
                         callback(null);
                     });
                 }
+                */
             });
         });
     }
