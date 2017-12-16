@@ -13,6 +13,7 @@ const expressMysqlSession = require("express-mysql-session");
 const expressValidator = require("express-validator");
 const multer = require("multer");
 const fs = require("fs");
+let _ = require("underscore");
 //const morgan = require("morgan");
 
 const upload = multer({ dest: path.join(__dirname, "uploads") });
@@ -266,7 +267,7 @@ app.get("/friends", middleWareAccessControl, (request, response) => {
     });
 });
 
-////// ACEPTAR O RECHAZAR AMISTAD ¿?¿?¿? -> response.locals¿?
+// Manejador de ruta ACCEPD OR DENIE FRIENDSHIP
 
 app.post("/friends", middleWareAccessControl, (request, response) => {
     if (request.body.action === 'Aceptar') {
@@ -355,12 +356,20 @@ app.get("/new_question", middleWareAccessControl, (request, response) => {
 });
 
 app.post("/new_question", middleWareAccessControl, (request, response) => {  
+    
     let arrayRespuestas = request.body.options.match(/^.*((\r\n|\n|\r)|$)/gm);
-    daoQ.newQuestion(request.body.question, arrayRespuestas, (err, result) => {
+    let arrayLimpio = [];
+
+    arrayRespuestas.forEach( i => {
+        if (i.trim() !== '')
+            arrayLimpio.push(i);
+    });
+
+    daoQ.newQuestion(request.body.question, arrayLimpio, (err, result) => {
         if (err) {
             console.error(err);
         }
-        response.redirect("/new_question");
+        response.redirect("/random");
     });
 });
 
@@ -371,18 +380,24 @@ app.get("/random", middleWareAccessControl, (request, response) => {
         if (err) {
             console.error(err);
         }
-        response.render("random", {preguntas: result});
+        else {
+            response.render("random", {preguntas: _.sample(result, 5)});
+        }
     });
 });
 
-// Manejador de ruta QUESTION_VIEW
+// Manejador de ruta QUESTION_VIEW - falta comprobar si ya currentUser ya ha respondido esa pregunta
 
 app.get("/question_view/:question", middleWareAccessControl, function(request, response) {
-    daoQ.getQuestionPage(request.params.question, (err, result) => {
+    daoQ.getQuestionPage(request.params.question, request.session.currentUser, (err, result, pregunta) => {
         if (err) {
             console.error(err);
         }
-        response.render("question_view", {texto_pregunta: result[0].texto_pregunta, pregunta: result[0].id});
+        response.render("question_view", {
+            texto_pregunta: result[0].texto_pregunta, 
+            pregunta: result[0].id,
+            respondida: pregunta[0].respondida
+        });
     });
 });
 
@@ -399,6 +414,21 @@ app.get("/answer/:question", middleWareAccessControl, function(request, response
             respuestas: answers
         });
     });
+});
+
+app.post("/answer", middleWareAccessControl, function(request, response) {
+
+    // Si no hay ninguna respuesta marcada o se ha marcado "Otra" pero se ha dejado en blanco
+    if (!request.body.radio || (request.body.radio === "otraRespuesta" && request.body.textoOtraRespuesta.trim() === ''))
+        response.redirect("/answer/" + request.body.id_pregunta);
+    else
+        daoQ.answerMyQuestion(request.session.currentUser, request.body.id_pregunta, request.body.radio, request.body.textoOtraRespuesta, (err, result) => {
+            if (err) {
+                console.error(err);
+            }
+            response.redirect("/question_view/" + request.body.id_pregunta);
+        });
+    
 });
 
 // Manejadores de ruta sin implementar

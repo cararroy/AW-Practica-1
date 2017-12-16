@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Casper María Rodríguez</title>
+	<title><%= name %></title>
 	<link rel="stylesheet" href="/css/style.css">
 	<link rel="stylesheet" href="/css/friends.css">
 </head>
@@ -15,20 +15,28 @@
 	<div class="container-amigos">
 
 		<h1><%= texto_pregunta %></h1>
+		
+		<% if (respondida === 0) { %>
 
-		<h5>No has contestado a esta pregunta.</h5>
+			<h5>No has contestado a esta pregunta.</h5>
+			
+			<div class="submit">
+				<a class="light-button" href="/answer/<%= pregunta %>">
+				Contestar pregunta</a>
+			</div>
 
-		<div class="submit">
-			<a class="light-button" href="/answer/<%= pregunta %>">
-			Contestar pregunta</a>
-		</div>
+			<% } else { %>
+
+				<h5>Ya has contestado a esta pregunta.</h5>
+
+				<% } %>
 
 		<h4>Los siguientes amigos han contestado a la pregunta:</h4>
 
 		<div id="solicitudes">
 
 			<div class="user-box">
-				<img src="img/man.png" alt="">
+				<img src="/img/man.png" alt="">
 				<h4>Casper María Rodríguez</h4>
 				<form method="POST" id="" class="btn-solicitud" action="">
 					
@@ -37,7 +45,7 @@
 
 			</div>
 			<div class="user-box">
-				<img src="img/man.png" alt="">
+				<img src="/img/man.png" alt="">
 				<h4>Casper María Rodríguez</h4>
 				<form method="POST" id="" class="btn-solicitud" action="">
 					
@@ -45,14 +53,14 @@
 				</form>
 			</div>
 			<div class="user-box">
-				<img src="img/man.png" alt="">
+				<img src="/img/man.png" alt="">
 				<h4>Casper María Rodríguez</h4>
 				<div class="veredicto">
 					<span class="acierto">Has acertado</span>
 				</div>
 			</div>
 			<div class="user-box">
-				<img src="img/man.png" alt="">
+				<img src="/img/man.png" alt="">
 				<h4>Casper María Rodríguez</h4>
 				<div class="veredicto">
 					<span class="fallo">Has fallado</span>

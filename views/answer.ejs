@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Casper María Rodríguez</title>
+	<title><%= name %></title>
 	<link rel="stylesheet" href="/css/style.css">
 	<link rel="stylesheet" href="/css/answer.css">
 </head>
@@ -18,26 +18,26 @@
 
 		<div id="preguntas">
 
-			<form action="/answer" method="POST">
+			<form class="align-left" action="/answer" method="POST">
 			<% respuestas.forEach( r => { %>
 				<div class="question-box">
 					<div class="radio">
-						<input id="respuesta" name="radio" type="radio" value="<%= r.id_answer %>">
-						<label for="respuesta" class="radio-label"><%= r.texto_respuesta %></label>
+						<input id="radio_<%= r.id_answer %>" name="radio" type="radio" value="<%= r.id_answer %>">
+						<label for="radio_<%= r.id_answer %>" class="radio-label"><%= r.texto_respuesta %></label>
 					</div>
 				</div>
 			<% }); %>			
 			
 			<div class="question-box otra">
 				<div class="radio">
-					<input id="Otra" name="radio" type="radio" value="otraRespuesta">
-					<label for="Otra" class="radio-label">Otra: </label>
+					<input id="otra" name="radio" type="radio" value="otraRespuesta">
+					<label for="otra" class="radio-label">Otra: </label>
 				</div>
 				<input name="textoOtraRespuesta" value="" type="text">
 			</div>
 
 			<div class="submit">
-				<input type="hidden" value="<%= pregunta %>">
+				<input name="id_pregunta" type="hidden" value="<%= pregunta %>">
 				<input type="submit" value="Responder" class="light-button">
 			</div>
 		</form>

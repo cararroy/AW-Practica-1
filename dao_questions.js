@@ -60,19 +60,6 @@ class DAOQuestions {
                     connection.release();
                     callback(err);
                 }
-                /*
-                else {
-                    // insertar respuestas en tabla answer_options con el id de la pregunta insertada arriba
-                    connection.query("INSERT INTO answer_options(id_question, texto_respuesta) VALUES (?, ?)", [result.insertId, options], (err) => {
-                        connection.release();
-                        if (err) {
-                            callback(err);
-                            return;
-                        }
-                        callback(null);
-                    });
-                }
-                */
             });
         });
     }
@@ -92,15 +79,17 @@ class DAOQuestions {
     }
 
     // Obtener una pregunta (en el apartado 3 tb el resto de aciertos de adivinar)
-    getQuestionPage(question, callback) {
+    getQuestionPage(question, currentUser, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) {
                 callback(err);
                 return;
             }
             connection.query("SELECT * FROM questions WHERE id=?", [question], (err, result) => {
-                connection.release();
-                callback(null, result);
+                connection.query("SELECT COUNT(*) AS respondida FROM answers WHERE email_usuario=? AND id_question=?", [currentUser, question], (err, respondida) => {
+                    connection.release();
+                    callback(null, result, respondida);
+                });
             });
         });
     }
@@ -117,6 +106,28 @@ class DAOQuestions {
                     callback(null, result, respuestas);                    
                 });
             });
+        });
+    }
+
+    answerMyQuestion(user, question, answer, answerText, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            if (answer === "otraRespuesta") {
+                connection.query("INSERT INTO answer_options(id_question, texto_respuesta) VALUES (?, ?)", [question, answerText], (err, result) => {
+                    connection.query("INSERT INTO answers VALUES (?, ?, ?)", [user, question, result.insertId], (err) => {
+                        connection.release();
+                        callback(null);
+                    });
+                });
+            } else {
+                connection.query("INSERT INTO answers VALUES (?, ?, ?)", [user, question, answer], (err) => {
+                    connection.release();
+                    callback(null);
+                });
+            }
         });
     }
 

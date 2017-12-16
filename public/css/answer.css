@@ -66,3 +66,11 @@
 .otra input[type="text"] {
   width: 350px;
 }
+
+form.align-left > div {
+  display: block;
+}
+
+form.align-left > div.otra {
+  display: flex;
+}
