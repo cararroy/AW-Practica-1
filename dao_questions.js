@@ -40,7 +40,7 @@ class DAOQuestions {
                     callback(err);
                     return;
                 }
-                else {
+                else {                    
                     // insertar respuestas en tabla answer_options con el id de la pregunta insertada arriba
                     connection.query("INSERT INTO answer_options(id_question, texto_respuesta) VALUES (?, ?)", [result.insertId, options], (err) => {
                         connection.release();
@@ -51,6 +51,34 @@ class DAOQuestions {
                         callback(null);
                     });
                 }
+            });
+        });
+    }
+
+    // Obtener todas las preguntas de la base de datos
+    randomQuestions(callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("SELECT * FROM questions", (err, result) => {
+                connection.release();
+                callback(null, result);
+            });
+        });
+    }
+
+    // Obtener una pregunta (en el apartado 3 tb el resto de aciertos de adivinar)
+    getQuestionPage(question, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("SELECT * FROM questions WHERE id=?", [question], (err, result) => {
+                connection.release();
+                callback(null, result);
             });
         });
     }
