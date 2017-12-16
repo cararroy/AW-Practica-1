@@ -354,12 +354,34 @@ app.get("/new_question", middleWareAccessControl, (request, response) => {
     response.render("new_question");
 });
 
-app.post("/new_question", middleWareAccessControl, (request, response) => {
+app.post("/new_question", middleWareAccessControl, (request, response) => {    
     daoQ.newQuestion(request.body.question, request.body.options, (err, result) => {
         if (err) {
             console.error(err);
         }
         response.redirect("/new_question");
+    });
+});
+
+// Manejador de ruta QUESTIONS
+
+app.get("/random", middleWareAccessControl, (request, response) => {
+    daoQ.randomQuestions((err, result) => {
+        if (err) {
+            console.error(err);
+        }
+        response.render("random", {preguntas: result});
+    });
+});
+
+// Manejador de ruta QUESTION_VIEW
+
+app.get("/question_view/:question", middleWareAccessControl, function(request, response) {
+    daoQ.getQuestionPage(request.params.question, (err, result) => {
+        if (err) {
+            console.error(err);
+        }
+        response.render("question_view", {preguntas: result[0].texto_pregunta});
     });
 });
 
@@ -373,10 +395,6 @@ app.get("/answer-other", function(request, response) {
     response.render("answer_other");
 });
 
-app.get("/question-view", function(request, response) {
+app.get("/question_view", function(request, response) {
     response.render("question_view");
-});
-
-app.get("/random", function(request, response) {
-    response.render("random");
 });

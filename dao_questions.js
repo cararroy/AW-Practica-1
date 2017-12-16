@@ -39,14 +39,16 @@ class DAOQuestions {
                 if (err) {
                     callback(err);
                     return;
-                } else if (questions.texto_pregunta !== 0) {
+                } else if (question.texto_pregunta !== 0) {
+                    console.log("entro aqui");
                     let arrayInterrogaciones = [];
                     let arrayInsert = [];
-                    for (let i = 0; i < questions.texto_pregunta; i++) {
+                    for (let i = 0; i < question.texto_pregunta; i++) {
                         arrayInterrogaciones.push("(?, ?)");
                         arrayInsert.push(result.insertId);
                         arrayInsert.push(question.texto_pregunta[i]);
                     }
+                    console.log("arrayInterrogaciones" + arrayInterrogaciones);
                     let cadenaInsert = "INSERT INTO answer_options(id_question, texto_respuesta) VALUES " + arrayInterrogaciones.join(",");
                     connection.query(cadenaInsert, arrayInsert, (err, result) => {
                         if (err) {
@@ -60,7 +62,6 @@ class DAOQuestions {
                     connection.release();
                     callback(err);
                 }
-
                 /*
                 else {
                     // insertar respuestas en tabla answer_options con el id de la pregunta insertada arriba
@@ -74,6 +75,34 @@ class DAOQuestions {
                     });
                 }
                 */
+            });
+        });
+    }
+
+    // Obtener todas las preguntas de la base de datos
+    randomQuestions(callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("SELECT * FROM questions", (err, result) => {
+                connection.release();
+                callback(null, result);
+            });
+        });
+    }
+
+    // Obtener una pregunta (en el apartado 3 tb el resto de aciertos de adivinar)
+    getQuestionPage(question, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("SELECT * FROM questions WHERE id=?", [question], (err, result) => {
+                connection.release();
+                callback(null, result);
             });
         });
     }
