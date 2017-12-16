@@ -5,7 +5,8 @@ if (friends) {
         <div class="user-box">
 			<img src="/imagen/<%= friend.img %>" alt="">
 			<h4><%= friend.nombre_completo %></h4>
-			<form method="POST" id="" class="btn-solicitud" action="">
+			<form method="GET" id="" class="btn-solicitud" action="/friend_profile">
+				<input type="hidden" name="friendEmail" value="<%= friend.email %>">
 				<input value="Ver perfil" type="submit">
 			</form>
 		</div>

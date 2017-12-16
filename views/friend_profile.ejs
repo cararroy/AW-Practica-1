@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title><%= name %></title>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/profile.css">
+</head>
+
+<body>
+
+	<%- include("header_logged") %>
+
+	<div class="sub-header"></div>
+	<div class="img-profile">
+		<img width="150" height="150" src="/imagen/<%= friend_img %>" alt="">
+	</div>
+
+
+	<!-- Contenedor principal -->
+	<div class="container-profile">
+
+		<h1>Perfil de <%= friend_name %></h1>
+
+		<div id="profile-box">
+
+			<div id="data-user">
+				<div><img class="purple-circle" width="32" height="32" src="img/boy.png" alt=""></div>
+				<div><%= friend_name %></div>
+				<% if (friend_fecha_nacimiento !== -1) { %>
+					<div><img class="purple-circle" width="32" height="32" src="img/cake.png" alt=""></div>
+					<div><%= friend_fecha_nacimiento %> años</div>
+				<% } %>
+				<div><img class="purple-circle" width="32" height="32" src="img/gender.png" alt=""></div>
+				<div><%= friend_genero %></div>
+				<div><img class="purple-circle" width="32" height="32" src="img/coins.png" alt=""></div>
+				<div><%= friend_puntuacion %> puntos</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>
