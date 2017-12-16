@@ -381,20 +381,27 @@ app.get("/question_view/:question", middleWareAccessControl, function(request, r
         if (err) {
             console.error(err);
         }
-        response.render("question_view", {preguntas: result[0].texto_pregunta});
+        response.render("question_view", {texto_pregunta: result[0].texto_pregunta, pregunta: result[0].id});
+    });
+});
+
+// Manejador de ruta ANSWER (responder una pregunta para sí mismo)
+
+app.get("/answer/:question", middleWareAccessControl, function(request, response) {
+    daoQ.getQuestionAndOptions(request.params.question, (err, result, answers) => {
+        if (err) {
+            console.error(err);
+        }
+        response.render("answer", {
+            texto_pregunta: result[0].texto_pregunta,
+            pregunta: result[0].id,
+            respuestas: answers
+        });
     });
 });
 
 // Manejadores de ruta sin implementar
 
-app.get("/answer", function(request, response) {
-    response.render("answer");
-});
-
 app.get("/answer-other", function(request, response) {
     response.render("answer_other");
-});
-
-app.get("/question_view", function(request, response) {
-    response.render("question_view");
 });
