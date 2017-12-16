@@ -105,6 +105,21 @@ class DAOQuestions {
         });
     }
 
+    getQuestionAndOptions(question, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("SELECT id_answer, texto_respuesta FROM answer_options WHERE id_question=?", [question], (err, respuestas) => {
+                connection.query("SELECT * FROM questions WHERE id=?", [question], (err, result) => {
+                    connection.release();
+                    callback(null, result, respuestas);                    
+                });
+            });
+        });
+    }
+
 }
 
 module.exports = {
