@@ -220,7 +220,42 @@ class DAOUsers {
                 });
             }
         });
-    }   
+    }
+    
+    insertPhoto(email, photo, description, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+            } else {
+                connection.query("INSERT INTO facebluff.gallery VALUES (?, ?, ?)", [email, photo, description], (err) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null);
+                    }
+                });
+            }
+        });
+    }
+
+    getUserGallery(email, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT * FROM facebluff.gallery WHERE email_usuario=?", [email], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
 }
 
 module.exports = {

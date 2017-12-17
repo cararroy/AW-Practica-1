@@ -50,6 +50,30 @@
 
 	</div>
 
+	<div class="container-fluid">
+			<h2>Galería de imágenes</h2>
+			<div class="upload-photo-box">
+				<form action="/gallery" method="POST" enctype="multipart/form-data">
+					<input type="text" placeholder="Descripción" name="description">
+					<input type="file" name="foto">	
+					<div class="submit">
+						<input type="submit" value="Subir imagen" class="light-button">
+					</div>				
+				</form>
+			</div>
+
+			<div class="gallery">
+				
+					<% gallery.forEach( g => { %>
+						<div class="img-box">
+							<img src="/imagen/<%= g.img %>" alt="">
+							<p><%= g.description %></p>
+						</div>
+					<% }); %>
+				
+			</div>
+	</div>
+
 </body>
 
 </html>

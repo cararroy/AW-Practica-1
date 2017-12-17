@@ -184,9 +184,16 @@ app.get("/my_profile", middleWareAccessControl, (request, response) => {
         if (err) {
             console.error(err);
         } else {
-            response.render("my_profile", {
-                fecha_nacimiento: result.edad,
-                genero: result.genero
+            let dataUser = daoU.getUserGallery(request.session.currentUser, (err, galeria) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    response.render("my_profile", {
+                        fecha_nacimiento: result.edad,
+                        genero: result.genero,
+                        gallery: galeria
+                    });
+                }
             });
         }
     });
@@ -490,31 +497,49 @@ app.post("/answer_other", middleWareAccessControl, function(request, response) {
     });          
 });
 
-// Manejadores de ruta sin implementar
+// Manejador de ruta ANSWER_FRIENDS
 
 app.post("/answer_friend", middleWareAccessControl, function(request, response) {
     
-        // Si no hay ninguna respuesta marcada
-        if (!request.body.radio) {
-            response.redirect("/question_view/" + request.body.question);
-        }
-        else {
-            daoQ.getCorrectOption(request.body.email_friend, request.body.question, (err, opcionCorrecta) => {
+    // Si no hay ninguna respuesta marcada
+    if (!request.body.radio) {
+        response.redirect("/question_view/" + request.body.question);
+    }
+    else {
+        daoQ.getCorrectOption(request.body.email_friend, request.body.question, (err, opcionCorrecta) => {
+            if (err) {
+                console.error(err);
+            }
+            let adivinado;
+            if (Number(request.body.radio) === Number(opcionCorrecta.id_answer))
+                adivinado = 1;
+            else
+                adivinado = 0;
+            
+                daoQ.answerFriend(request.session.currentUser, request.body.email_friend, request.body.question, adivinado, (err, result) => {
                 if (err) {
                     console.error(err);
                 }
-                let adivinado;
-                if (Number(request.body.radio) === Number(opcionCorrecta.id_answer))
-                    adivinado = 1;
-                else
-                    adivinado = 0;
-                
-                    daoQ.answerFriend(request.session.currentUser, request.body.email_friend, request.body.question, adivinado, (err, result) => {
-                    if (err) {
-                        console.error(err);
-                    }
-                    response.redirect("/question_view/" + request.body.question);
-                });
-             });  
-        }   
-    });
+                response.redirect("/question_view/" + request.body.question);
+            });
+            });  
+    }   
+});
+
+// Manejador de ruta GALLERY (para subir imagenes a la galeria)
+
+app.post("/gallery", upload.single("foto"), middleWareAccessControl, function(request, response) {
+    
+    if (request.session.puntuacion < 100) {
+        response.redirect("/my_profile");
+    }
+    else {
+        
+        daoU.insertPhoto(request.session.currentUser, request.file.filename, request.body.description, (err) => {
+            if (err) {
+                console.error(err);
+            }
+            response.redirect("/my_profile");
+        });
+    }   
+});

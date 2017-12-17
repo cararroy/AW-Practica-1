@@ -233,3 +233,71 @@ input[type="submit"] {
     padding: 5px;
     background-color: #e6e6e6;
 }
+
+.container-fluid {
+	padding: 50px 30px;
+	max-width: 900px;
+	margin: auto;
+}
+
+.container-fluid h2 {
+	text-align: center;
+}
+
+.upload-photo-box {
+	border: 3px solid purple;
+	font-family: 'MavenPro';
+	text-align: center;
+	font-size: 15px;
+	background-color: white;
+	border-radius: 5px;
+	padding: 5px 10px;
+	padding-top: 25px;
+}
+
+.upload-photo-box input {
+	width: 400px;
+	margin: 10px 10px;
+}
+
+.upload-photo-box .submit {
+	margin-top: 0px;
+}
+
+.gallery {
+	margin: auto;
+	display: grid;
+	width: 900px;
+	padding: 10px;
+	/* Tres columnas */
+	grid-template-columns: 300px 300px 300px;
+	/* Cuatro filas
+	  grid-template-rows: 50px 50px 50px 50px ;*/
+	grid-column-gap: 10px;
+	align-items: center;
+	justify-items: flex-start;
+	margin-bottom: 50px;
+}
+
+.img-box {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	border-top: 7px solid purple;
+	border-bottom: 7px solid purple;
+	font-family: 'MavenPro';
+	font-size: 15px;
+	border-radius: 5px;
+	width: 200px;
+	height: 200px;
+	padding: 25px 40px;
+	background-color: white;
+	margin-top: 20px;
+	margin-bottom: 0px;
+}
+
+.img-box img {
+	width: 100px;
+	height: auto;
+}
