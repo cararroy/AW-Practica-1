@@ -14,7 +14,6 @@ const expressValidator = require("express-validator");
 const multer = require("multer");
 const fs = require("fs");
 let _ = require("underscore");
-//const morgan = require("morgan");
 
 const upload = multer({ dest: path.join(__dirname, "uploads") });
 const ficherosEstaticos = path.join(__dirname, "public");
@@ -29,7 +28,6 @@ const sessionStore = new MySQLStore({
 
 const app = express();
 
-//app.use(morgan("dev"));
 app.use(express.static(ficherosEstaticos));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator({
