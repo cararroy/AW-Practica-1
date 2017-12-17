@@ -352,24 +352,41 @@ app.get("/friend_profile", middleWareAccessControl, (request, response) => {
 // Manejadores de ruta NEW_QUESTION
 
 app.get("/new_question", middleWareAccessControl, (request, response) => {
-    response.render("new_question");
+    response.render("new_question", {errores: [], wrong: {}});
 });
 
 app.post("/new_question", middleWareAccessControl, (request, response) => {  
     
-    let arrayRespuestas = request.body.options.match(/^.*((\r\n|\n|\r)|$)/gm);
-    let arrayLimpio = [];
+    request.checkBody("question", "La pregunta no puede estar vacía").notEmpty();
+    request.checkBody("options", "Escribe al menos una respuesta").notEmpty();
+    
+    request.getValidationResult().then((result) => {
+        
+        var wrongQuestion = {
+            question: request.body.question,
+            options: request.body.options
+        };
 
-    arrayRespuestas.forEach( i => {
-        if (i.trim() !== '')
-            arrayLimpio.push(i);
-    });
+        if (result.isEmpty()) {
 
-    daoQ.newQuestion(request.body.question, arrayLimpio, (err, result) => {
-        if (err) {
-            console.error(err);
+            let arrayRespuestas = request.body.options.match(/^.*((\r\n|\n|\r)|$)/gm);
+            let arrayLimpio = [];
+        
+            arrayRespuestas.forEach( i => {
+                if (i.trim() !== '')
+                    arrayLimpio.push(i);
+            });
+        
+            daoQ.newQuestion(request.body.question, arrayLimpio, (err, result) => {
+                if (err) {
+                    console.error(err);
+                }
+                response.redirect("/random");
+            });    
+
+        } else {
+            response.render("new_question", {errores: result.mapped(), wrong: wrongQuestion});
         }
-        response.redirect("/random");
     });
 });
 

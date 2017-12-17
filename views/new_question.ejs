@@ -21,17 +21,28 @@
 			<form action="/new_question" method="POST">
 				<div>
 					<label>Pregunta</label>
-					<input type="test" name="question" value="">
+					<input type="text" name="question" value="<%= wrong.question %>">
 				</div>
 				<p class="txt-center">Respuestas (una por linea)</p>	
 				<div>									
-					<textarea rows="8" cols="70" name="options"></textarea>
+					<textarea rows="8" cols="70" name="options"><%= wrong.options %></textarea>
 				</div>
 				<div class="submit">
 					<input type="submit" value="Crear pregunta" class="light-button">
 				</div>
 			</form>
 		</div>
+
+		<% if (errores.question) { %>
+			<div class="error">
+				<%= errores.question.msg %>
+			</div>
+		<% } %>
+		<% if (errores.options) { %>
+			<div class="error">
+				<%= errores.options.msg %>
+			</div>
+		<% } %>
 
 	</div>
 
