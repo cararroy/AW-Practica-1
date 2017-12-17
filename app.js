@@ -445,12 +445,76 @@ app.post("/answer", middleWareAccessControl, function(request, response) {
                 console.error(err);
             }
             response.redirect("/question_view/" + request.body.id_pregunta);
-        });
+        });    
+});
+
+// Manejador de ruta ANSWER_OTHER (responder una pregunta a un amigo para adivinar su respuesta)
+
+app.post("/answer_other", middleWareAccessControl, function(request, response) {
     
+    daoQ.getQuestionAndOptions(request.body.question, (err, result, answers) => {
+        if (err) {
+            console.error(err);
+        }
+        daoQ.getCorrectOption(request.body.email_friend, request.body.question, (err, opcionCorrecta) => {
+            if (err) {
+                console.error(err);
+            }
+            
+            // Numero de opciones que se insertaron al crear la pregunta
+            let numOpcionesOriginales = result[0].num_options;
+
+            // Opcion correcta
+            let correcta = { id_answer: opcionCorrecta.id_answer, texto_respuesta: opcionCorrecta.texto_respuesta};
+            
+            // Se guarda un array sin la opcion correcta
+            let opcionesIncorrectas = answers.filter((i) => { return i.id_answer !== correcta.id_answer });
+            
+            // Se crea un array del tamaño final - 1 de solo opciones incorrectas
+            let res = _.sample(opcionesIncorrectas, numOpcionesOriginales - 1);
+
+            // Se añade la opción correcta (ya es del mismo tamaño que cuando se creo)
+            res.push(correcta);
+            
+            // Cuando se devuelve se desordena con shuffle
+
+            response.render("answer_other", {            
+                question: request.body.question,
+                texto_pregunta: result[0].texto_pregunta,
+                name_friend: request.body.name_friend,
+                email_friend: request.body.email_friend,
+                respuestas: _.shuffle(res),
+                error: ''
+            });
+        });
+    });          
 });
 
 // Manejadores de ruta sin implementar
 
-app.get("/answer-other", function(request, response) {
-    response.render("answer_other");
-});
+app.post("/answer_friend", middleWareAccessControl, function(request, response) {
+    
+        // Si no hay ninguna respuesta marcada
+        if (!request.body.radio) {
+            response.redirect("/question_view/" + request.body.question);
+        }
+        else {
+            daoQ.getCorrectOption(request.body.email_friend, request.body.question, (err, opcionCorrecta) => {
+                if (err) {
+                    console.error(err);
+                }
+                let adivinado;
+                if (Number(request.body.radio) === Number(opcionCorrecta.id_answer))
+                    adivinado = 1;
+                else
+                    adivinado = 0;
+                
+                    daoQ.answerFriend(request.session.currentUser, request.body.email_friend, request.body.question, adivinado, (err, result) => {
+                    if (err) {
+                        console.error(err);
+                    }
+                    response.redirect("/question_view/" + request.body.question);
+                });
+             });  
+        }   
+    });

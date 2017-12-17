@@ -10,69 +10,37 @@
 
 <body>
 
-	<!-- Header -->
-	<div id="Facebluf-header">
-		<div id="logo">
-			<img src="img/Logo.png" alt="">
-		</div>
-		<div id="menu-right">
-			<div id="menu">
-				<a href="#">Perfil</a>
-				<a href="#">Amigos</a>
-				<a href="#">Preguntas</a>
-				<a href="index.html">Desconectar</a>
-			</div>
-			<div id="usuario-banner">
-				<img class="purple-circle" width="32" height="32" src="img/man.png" alt="">
-				<div id="data-banner">
-					<p>Casper María Rodríguez</p>
-					<div id="banner-coins">
-						<img width="15" height="15" src="img/coins.png" alt="">
-						<span>50 puntos</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<%- include("header_logged") %>
 
 	<div class="container-questions">
 
-		<h1>¿Nintendo Switch, PS4 o Xbox One?</h1>
-		<h5>¿Qué crees que opina <strong>Casper María Rodríguez</strong>?</h5>
+		<h1><%= texto_pregunta %></h1>
+		<h5>¿Qué crees que opina <strong><%= name_friend %></strong>?</h5>
 
 		<div id="preguntas">
+			<form class="align-left" action="/answer_friend" method="POST">
+				<% respuestas.forEach( r => { %>
+					<div class="question-box">
+						<div class="radio">
+							<input id="radio_<%= r.id_answer %>" name="radio" type="radio" value="<%= r.id_answer %>">
+							<label for="radio_<%= r.id_answer %>" class="radio-label"><%= r.texto_respuesta %></label>
+						</div>
+					</div>
+				<% }); %>
 
-			<div class="question-box">
-				<div class="radio">
-					<input id="Switch" name="radio" type="radio">
-					<label for="Switch" class="radio-label">Nintendo Switch</label>
+				<input type="hidden" name="email_friend" value="<%= email_friend %>">
+				<input type="hidden" name="question" value="<%= question %>">
+				<div class="submit">
+					<input type="submit" value="Responder" class="light-button">
 				</div>
-			</div>
-			<div class="question-box">
-				<div class="radio">
-					<input id="PS4" name="radio" type="radio">
-					<label for="PS4" class="radio-label">PS4</label>
-				</div>
-			</div>
-			<div class="question-box">
-				<div class="radio">
-					<input id="Xbox" name="radio" type="radio">
-					<label for="Xbox" class="radio-label">Xbox One</label>
-				</div>
-			</div>
-			<div class="question-box">
-				<div class="radio">
-					<input id="ninguna" name="radio" type="radio">
-					<label for="ninguna" class="radio-label">No me interesan los videojuegos</label>
-				</div>
-			</div>
-
+			</form>
 		</div>
 
-		<div class="submit">
-			<a class="light-button" href="#">
-			Responder</a>
-		</div>
+		<% if (error !== '') { %>
+			<div class="error">
+				<%= errores.email.msg %>
+			</div>
+		<% } %>
 
 	</div>
 

@@ -35,7 +35,7 @@ class DAOQuestions {
                 return;
             }
             // insertar pregunta en tabla questions y devolver id
-            connection.query("INSERT INTO questions(texto_pregunta) VALUES (?)", [question], (err, result) => {
+            connection.query("INSERT INTO questions(texto_pregunta, num_options) VALUES (?, ?)", [question, options.length], (err, result) => {
                 if (err) {
                     callback(err);
                     return;
@@ -87,12 +87,8 @@ class DAOQuestions {
             }
             connection.query("SELECT * FROM questions WHERE id=?", [question], (err, result) => {
                 connection.query("SELECT COUNT(*) AS respondida FROM answers WHERE email_usuario=? AND id_question=?", [currentUser, question], (err, respondida) => {
-                    
-                    // Obtener todos los amigos que ha respondido a esa pregunta
-                    // SELECT email_usuario FROM answers WHERE id_question=10 AND email_usuario IN (SELECT email FROM users as u JOIN friends as f WHERE (f.email1="cararroy@gmail.com" OR f.email2="cararroy@gmail.com") AND (f.email1 = u.email OR f.email2 = u.email) AND u.email<>"cararroy@gmail.com" AND f.confirmado = 1)
                     connection.query("SELECT nombre_completo, email, img, adivinado FROM users LEFT JOIN answer_other ON (logged_user=? AND friend=email AND id_question=?) where email IN (SELECT email_usuario FROM answers WHERE id_question=? AND email_usuario IN (SELECT email FROM users as u JOIN friends as f WHERE (f.email1=? OR f.email2=?) AND (f.email1 = u.email OR f.email2 = u.email) AND u.email<>? AND f.confirmado = 1))", 
                     [currentUser, question, question, currentUser, currentUser, currentUser], (err, amigos) => {
-                        console.log(amigos);
                         connection.release();
                         callback(null, result, respondida, amigos);
                     });
@@ -135,6 +131,44 @@ class DAOQuestions {
                     callback(null);
                 });
             }
+        });
+    }
+
+    getCorrectOption(friend, question, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("SELECT id_answer, texto_respuesta FROM answers NATURAL JOIN answer_options  WHERE email_usuario=? AND id_question=?", [friend, question], (err, result) => {
+                connection.release();
+                callback(null, result[0]);
+            });
+        });
+    }
+
+    answerFriend(logged_user, friend, question, adivinado, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+            connection.query("INSERT INTO answer_other VALUES (?, ?, ?, ?)", [logged_user, friend, question, adivinado], (err) => {
+                
+                if (adivinado === 1) {
+                    connection.query("SELECT puntuacion FROM users WHERE email=?", [logged_user], (err, result) => {
+                        console.log(result);
+                        console.log(result[0].puntuacion);
+                        connection.query("UPDATE users SET puntuacion=? WHERE email=?", [result[0].puntuacion + 50, logged_user], (err) => {
+                            connection.release();
+                            callback(null);
+                        });
+                    });
+                } else {                
+                    connection.release();
+                    callback(null);
+                }
+            });
         });
     }
 
