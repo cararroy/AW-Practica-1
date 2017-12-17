@@ -39,10 +39,20 @@
 				<div class="user-box">
 						<img src="/imagen/<%= f.img %>" alt="">
 						<h4><%= f.nombre_completo %></h4>
-						<form method="POST" id="" class="btn-solicitud" action="">
-							<input type="hidden" name="email_friend" value="<%= f.email %>">
-							<input value="Adivinar" type="submit">
-						</form>
+						<% if (f.adivinado === 0) { %>
+							<div class="veredicto">
+								<span class="fallo">Has fallado</span>
+							</div>
+						<% } else if (f.adivinado === 1) { %>
+							<div class="veredicto">
+								<span class="acierto">Has acertado</span>
+							</div>
+						<% } else { %>
+							<form method="POST" id="" class="btn-solicitud" action="/answer_other">
+								<input type="hidden" name="email_friend" value="<%= f.email %>">
+								<input value="Adivinar" type="submit">
+							</form>
+						<% } %>
 		
 					</div>
 			<% }); %>

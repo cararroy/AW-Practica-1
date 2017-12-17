@@ -90,8 +90,8 @@ class DAOQuestions {
                     
                     // Obtener todos los amigos que ha respondido a esa pregunta
                     // SELECT email_usuario FROM answers WHERE id_question=10 AND email_usuario IN (SELECT email FROM users as u JOIN friends as f WHERE (f.email1="cararroy@gmail.com" OR f.email2="cararroy@gmail.com") AND (f.email1 = u.email OR f.email2 = u.email) AND u.email<>"cararroy@gmail.com" AND f.confirmado = 1)
-                    connection.query("SELECT nombre_completo, email, img FROM users where email IN (SELECT email_usuario FROM answers WHERE id_question=? AND email_usuario IN (SELECT email FROM users as u JOIN friends as f WHERE (f.email1=? OR f.email2=?) AND (f.email1 = u.email OR f.email2 = u.email) AND u.email<>? AND f.confirmado = 1))", 
-                    [question, currentUser, currentUser, currentUser], (err, amigos) => {
+                    connection.query("SELECT nombre_completo, email, img, adivinado FROM users LEFT JOIN answer_other ON (logged_user=? AND friend=email AND id_question=?) where email IN (SELECT email_usuario FROM answers WHERE id_question=? AND email_usuario IN (SELECT email FROM users as u JOIN friends as f WHERE (f.email1=? OR f.email2=?) AND (f.email1 = u.email OR f.email2 = u.email) AND u.email<>? AND f.confirmado = 1))", 
+                    [currentUser, question, question, currentUser, currentUser, currentUser], (err, amigos) => {
                         console.log(amigos);
                         connection.release();
                         callback(null, result, respondida, amigos);
