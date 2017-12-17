@@ -35,38 +35,17 @@
 
 		<div id="solicitudes">
 
-			<div class="user-box">
-				<img src="/img/man.png" alt="">
-				<h4>Casper María Rodríguez</h4>
-				<form method="POST" id="" class="btn-solicitud" action="">
-					
-					<input value="Adivinar" type="submit">
-				</form>
-
-			</div>
-			<div class="user-box">
-				<img src="/img/man.png" alt="">
-				<h4>Casper María Rodríguez</h4>
-				<form method="POST" id="" class="btn-solicitud" action="">
-					
-					<input value="Adivinar" type="submit">
-				</form>
-			</div>
-			<div class="user-box">
-				<img src="/img/man.png" alt="">
-				<h4>Casper María Rodríguez</h4>
-				<div class="veredicto">
-					<span class="acierto">Has acertado</span>
-				</div>
-			</div>
-			<div class="user-box">
-				<img src="/img/man.png" alt="">
-				<h4>Casper María Rodríguez</h4>
-				<div class="veredicto">
-					<span class="fallo">Has fallado</span>
-				</div>
-			</div>
-
+			<% friends.forEach( f => { %>
+				<div class="user-box">
+						<img src="/imagen/<%= f.img %>" alt="">
+						<h4><%= f.nombre_completo %></h4>
+						<form method="POST" id="" class="btn-solicitud" action="">
+							<input type="hidden" name="email_friend" value="<%= f.email %>">
+							<input value="Adivinar" type="submit">
+						</form>
+		
+					</div>
+			<% }); %>
 
 		</div>
 

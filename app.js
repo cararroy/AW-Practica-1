@@ -403,17 +403,18 @@ app.get("/random", middleWareAccessControl, (request, response) => {
     });
 });
 
-// Manejador de ruta QUESTION_VIEW - falta comprobar si ya currentUser ya ha respondido esa pregunta
+// Manejador de ruta QUESTION_VIEW
 
 app.get("/question_view/:question", middleWareAccessControl, function(request, response) {
-    daoQ.getQuestionPage(request.params.question, request.session.currentUser, (err, result, pregunta) => {
+    daoQ.getQuestionPage(request.params.question, request.session.currentUser, (err, result, pregunta, amigos) => {
         if (err) {
             console.error(err);
         }
         response.render("question_view", {
             texto_pregunta: result[0].texto_pregunta, 
             pregunta: result[0].id,
-            respondida: pregunta[0].respondida
+            respondida: pregunta[0].respondida,
+            friends: amigos
         });
     });
 });
