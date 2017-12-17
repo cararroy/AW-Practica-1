@@ -157,8 +157,6 @@ class DAOQuestions {
                 
                 if (adivinado === 1) {
                     connection.query("SELECT puntuacion FROM users WHERE email=?", [logged_user], (err, result) => {
-                        console.log(result);
-                        console.log(result[0].puntuacion);
                         connection.query("UPDATE users SET puntuacion=? WHERE email=?", [result[0].puntuacion + 50, logged_user], (err) => {
                             connection.release();
                             callback(null);

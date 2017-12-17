@@ -345,12 +345,19 @@ app.get("/friend_profile", middleWareAccessControl, (request, response) => {
         if (err) {
             console.error(err);
         } else {
-            response.render("friend_profile", {
-                friend_name: result.nombre_completo,
-                friend_img: result.img,
-                friend_puntuacion: result.puntuacion,
-                friend_fecha_nacimiento: result.edad,
-                friend_genero: result.genero
+            let dataUser = daoU.getUserGallery(request.query.friendEmail, (err, galeria) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    response.render("friend_profile", {
+                        friend_name: result.nombre_completo,
+                        friend_img: result.img,
+                        friend_puntuacion: result.puntuacion,
+                        friend_fecha_nacimiento: result.edad,
+                        friend_genero: result.genero,
+                        gallery: galeria
+                    });
+                }
             });
         }
     });
@@ -530,7 +537,7 @@ app.post("/answer_friend", middleWareAccessControl, function(request, response) 
 
 app.post("/gallery", upload.single("foto"), middleWareAccessControl, function(request, response) {
     
-    if (request.session.puntuacion < 100) {
+    if (response.locals.puntuacion < 100) {
         response.redirect("/my_profile");
     }
     else {

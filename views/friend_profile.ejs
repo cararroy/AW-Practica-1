@@ -42,6 +42,21 @@
 
 	</div>
 
+	<div class="container-fluid">
+			<h2>Galería de imágenes</h2>
+			
+			<div class="gallery">
+				
+					<% gallery.forEach( g => { %>
+						<div class="img-box">
+							<img src="/imagen/<%= g.img %>" alt="">
+							<p><%= g.description %></p>
+						</div>
+					<% }); %>
+				
+			</div>
+	</div>
+
 </body>
 
 </html>

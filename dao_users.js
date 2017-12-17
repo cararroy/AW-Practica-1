@@ -228,12 +228,15 @@ class DAOUsers {
                 callback(err);
             } else {
                 connection.query("INSERT INTO facebluff.gallery VALUES (?, ?, ?)", [email, photo, description], (err) => {
-                    connection.release();
                     if (err) {
                         callback(err);
-                    } else {
-                        callback(null);
                     }
+                    connection.query("SELECT puntuacion FROM users WHERE email=?", [email], (err, result) => {
+                        connection.query("UPDATE users SET puntuacion=? WHERE email=?", [result[0].puntuacion - 100, email], (err) => {
+                            connection.release();
+                            callback(null);
+                        });
+                    });
                 });
             }
         });
